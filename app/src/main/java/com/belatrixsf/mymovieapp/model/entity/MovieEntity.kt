@@ -4,56 +4,72 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
-
-
 class MovieEntity(
+    vote_count: Int,
     id: Int,
-    voteCount: Int,
-    voteAverage: Int,
+    vote_average: Double,
     title: String,
-    rating: Double,
-    trailer: String,
+    popularity: Double,
+    poster_path: String,
+    original_language: String,
+    original_title: String,
+    genre_ids: List<Int>,
+    backdrop_path: String,
+    adult: Boolean,
     overview: String,
-    release: String,
-    poster: String,
-    reviewUsers: String,
-    genreIds: List<Int>
+    release_date: String
 ) {
+
+    @SerializedName("vote_count")
+    @Expose
+    val vote_count = vote_count
 
     @SerializedName("id")
     @Expose
-    private val id: Int = id
-
-    @SerializedName("title")
-    @Expose
-    private val title: String? = title
-
-    @SerializedName("poster_path")
-    @Expose
-    private val posterPath: String? = poster
-
-    @SerializedName("release_date")
-    @Expose
-    private val releaseDate: String? = release
+    val id = id
 
     @SerializedName("vote_average")
     @Expose
-    private val rating: Double = rating
+    val vote_average = vote_average
+
+    @SerializedName("title")
+    @Expose
+    val title = title
+
+    @SerializedName("popularity")
+    @Expose
+    val popularity = popularity
+
+    @SerializedName("poster_path")
+    @Expose
+    val poster_path = poster_path
+
+    @SerializedName("original_language")
+    @Expose
+    val original_language= original_language
+
+    @SerializedName("original_title")
+    @Expose
+    val original_title = original_title
 
     @SerializedName("genre_ids")
     @Expose
-    private val genreIds: List<Int> = genreIds
+    val genre_ids = genre_ids
 
+    @SerializedName("backdrop_path")
+    @Expose
+    val backdrop_path = backdrop_path
 
+    @SerializedName("adult")
+    @Expose
+    val adult = adult
 
-//    val idMovie = id
-//    val voteCountMovie = voteCount
-//    val voteAverageMovie = voteAverage
-//    val titleMovie = title
-//    val popularityMovie = popularity
-//    val trailerMovie = trailer
-//    val overviewMovie = overview
-//    val releaseDateMovie = release
-//    val posterMovie = poster
-//    val reviewUsersMovie = reviewUsers
+    @SerializedName("overview")
+    @Expose
+    val overview= overview
+
+    @SerializedName("release_date")
+    @Expose
+    val release_date = release_date
+
 }

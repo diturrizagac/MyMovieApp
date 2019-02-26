@@ -1,8 +1,8 @@
 package com.belatrixsf.mymovieapp
 
-import com.belatrixsf.mymovieapp.model.entity.Movie
+import com.belatrixsf.mymovieapp.model.entity.MovieEntity
 
 interface OnGetMoviesCallback {
-    fun onSuccess(movies: List<Movie>)
+    fun onSuccess(movies: List<MovieEntity>)
     fun onError()
 }

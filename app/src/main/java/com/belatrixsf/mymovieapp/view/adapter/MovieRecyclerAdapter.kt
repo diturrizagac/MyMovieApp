@@ -11,10 +11,10 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
-import com.belatrixsf.mymovieapp.repository.MoviesRepository
-import com.belatrixsf.mymovieapp.view.ui.MovieDetailActivity
+import com.belatrixsf.mymovieapp.model.entity.MovieEntity
+import com.belatrixsf.mymovieapp.view.ui.detail.MovieDetailActivity
 
-class MovieRecyclerAdapter(private val mContext: Context, private val mData: List<Movie>) : RecyclerView.Adapter<MovieRecyclerAdapter.MyViewHolder>() {
+class MovieRecyclerAdapter(private val mContext: Context, private val mData: List<MovieEntity>) : RecyclerView.Adapter<MovieRecyclerAdapter.MyViewHolder>() {
 
 
 
@@ -26,15 +26,15 @@ class MovieRecyclerAdapter(private val mContext: Context, private val mData: Lis
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.tv_movie_title.text = mData[position].titleMovie
-        holder.img_movie_thumbail.setImageResource(mData[position].thumbnailMovie!!)
+        holder.tv_movie_title.text = mData[position].title
+        //holder.img_movie_thumbail.setImageResource() // glide
         holder.cardView.setOnClickListener {
             val intent = Intent(mContext, MovieDetailActivity::class.java)
 
             // passing data to the book activity
-            intent.putExtra("Title", mData[position].titleMovie)
-            intent.putExtra("Description", mData[position].descriptionMovie)
-            intent.putExtra("Thumbnail", mData[position].thumbnailMovie)
+            intent.putExtra("Title", mData[position].title)
+            intent.putExtra("Description", mData[position].overview)
+            intent.putExtra("Thumbnail", mData[position].poster_path)
             // start the activity
 
             mContext.startActivity(intent)

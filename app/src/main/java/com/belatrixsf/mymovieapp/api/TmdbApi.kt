@@ -7,10 +7,13 @@ import retrofit2.http.Query
 
 
 interface TmdbApi {
-    @GET("movie/popular")
+    @GET ("")
+    fun getMovies(
+        @Query("api_key") apiKey:String
+    ): Call<MoviesResponse>
+
+    @GET("discover/movie?sort_by=popularity.desc")
     fun getPopularMovies(
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String,
-        @Query("page") page: Int
+        @Query("api_key") apiKey: String
     ): Call<MoviesResponse>
 }

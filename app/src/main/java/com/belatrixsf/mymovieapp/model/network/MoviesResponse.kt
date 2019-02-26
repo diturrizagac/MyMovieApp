@@ -1,6 +1,7 @@
 package com.belatrixsf.mymovieapp.model.network
 
 import com.belatrixsf.mymovieapp.model.entity.Movie
+import com.belatrixsf.mymovieapp.model.entity.MovieEntity
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -17,7 +18,7 @@ class MoviesResponse {
 
     @SerializedName("results")
     @Expose
-    var movies: List<Movie>? = null
+    var movies: List<MovieEntity>? = null
 
     @SerializedName("total_pages")
     @Expose

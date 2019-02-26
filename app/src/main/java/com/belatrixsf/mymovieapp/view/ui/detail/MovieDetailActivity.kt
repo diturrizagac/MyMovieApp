@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.ui
+package com.belatrixsf.mymovieapp.view.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,6 @@ import com.belatrixsf.mymovieapp.R
 class MovieDetailActivity : AppCompatActivity() {
     private var tvtitle: TextView? = null
     private var tvdescription: TextView? = null
-    private var tvcategory: TextView? = null
     private var img: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,14 +21,13 @@ class MovieDetailActivity : AppCompatActivity() {
 
         // Recieve data
         val intent = intent
-        val Title = intent.extras!!.getString("Title")
-        val Description = intent.extras!!.getString("Description")
+        val title = intent.extras!!.getString("Title")
+        val description = intent.extras!!.getString("Description")
         val image = intent.extras!!.getInt("Thumbnail")
 
         // Setting values
-
-        tvtitle!!.text = Title
-        tvdescription!!.text = Description
+        tvtitle!!.text = title
+        tvdescription!!.text = description
         img!!.setImageResource(image)
 
 
