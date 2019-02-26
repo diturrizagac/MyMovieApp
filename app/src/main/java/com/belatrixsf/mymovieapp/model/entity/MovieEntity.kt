@@ -18,7 +18,7 @@ class MovieEntity(
     adult: Boolean,
     overview: String,
     release_date: String
-) {
+): Serializable {
 
     @SerializedName("vote_count")
     @Expose

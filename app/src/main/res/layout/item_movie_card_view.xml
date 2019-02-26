@@ -3,11 +3,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:cardview="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cardview_id"
-        android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:layout_width="200dp"
-        android:layout_height="290dp"
-        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="#8A000000"
         cardview:cardCornerRadius="4dp">
 
     <LinearLayout
@@ -19,19 +18,9 @@
         <ImageView
                 android:id="@+id/movie_img_id"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:background="#2d2d2d"/>
-
-        <TextView
-                android:id="@+id/movie_title_id"
-                android:textColor="#2d2d2d"
-                android:textSize="13sp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Movie Title"/>
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -1,6 +1,8 @@
 package com.belatrixsf.mymovieapp.model.entity
 
-class Movie {
+import java.io.Serializable
+
+class Movie : Serializable {
     var vote_count: Int? = null
     var id: Int? = null
     var vote_average: Double? = null

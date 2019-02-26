@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
-import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.model.entity.MovieEntity
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
@@ -16,7 +15,6 @@ class MovieRecyclerActivity : AppCompatActivity() {
     lateinit var movieList: RecyclerView
     lateinit var movieAdapter: MoviesAdapter
     lateinit var moviesRepository: MoviesRepository
-    //lateinit var listMovie: MutableList<Movie>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +25,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
 
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<MovieEntity>) {
-                movieAdapter = MoviesAdapter(movies)
+                movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
                 movieList.adapter = movieAdapter
             }
 
@@ -36,23 +34,5 @@ class MovieRecyclerActivity : AppCompatActivity() {
                     .show()
             }
         })
-
-
-//        listMovie = ArrayList()
-//        listMovie.add(Movie("The Vegitarian", "Categorie Book", "Description book", R.drawable.thevigitarian))
-//        listMovie.add(Movie("The Wild Robot", "Categorie Book", "Description book", R.drawable.thewildrobot))
-//        listMovie.add(Movie("Maria Semples", "Categorie Book", "Description book", R.drawable.mariasemples))
-//        listMovie.add(Movie("The Martian", "Categorie Book", "Description book", R.drawable.themartian))
-//        listMovie.add(Movie("He Died with...", "Categorie Book", "Description book", R.drawable.hediedwith))
-//        listMovie.add(Movie("The Vegitarian", "Categorie Book", "Description book", R.drawable.thevigitarian))
-//        listMovie.add(Movie("The Wild Robot", "Categorie Book", "Description book", R.drawable.thewildrobot))
-//        listMovie.add(Movie("Maria Semples", "Categorie Book", "Description book", R.drawable.mariasemples))
-//        listMovie.add(Movie("The Martian", "Categorie Book", "Description book", R.drawable.themartian))
-//        listMovie.add(Movie("He Died with...", "Categorie Book", "Description book", R.drawable.hediedwith))
-//        listMovie.add(Movie("The Vegitarian", "Categorie Book", "Description book", R.drawable.thevigitarian))
-//        listMovie.add(Movie("The Wild Robot", "Categorie Book", "Description book", R.drawable.thewildrobot))
-//        listMovie.add(Movie("Maria Semples", "Categorie Book", "Description book", R.drawable.mariasemples))
-//        listMovie.add(Movie("The Martian", "Categorie Book", "Description book", R.drawable.themartian))
-//        listMovie.add(Movie("He Died with...", "Categorie Book", "Description book", R.drawable.hediedwith))
     }
 }

@@ -26,7 +26,7 @@ class MovieRecyclerAdapter(private val mContext: Context, private val mData: Lis
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.tv_movie_title.text = mData[position].title
+//        holder.tv_movie_title.text = mData[position].title
         //holder.img_movie_thumbail.setImageResource() // glide
         holder.cardView.setOnClickListener {
             val intent = Intent(mContext, MovieDetailActivity::class.java)
@@ -47,7 +47,7 @@ class MovieRecyclerAdapter(private val mContext: Context, private val mData: Lis
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var tv_movie_title: TextView = itemView.findViewById(R.id.movie_title_id)
+        //var tv_movie_title: TextView = itemView.findViewById(R.id.movie_title_id)
         var img_movie_thumbail: ImageView = itemView.findViewById(R.id.movie_img_id)
         var cardView: CardView = itemView.findViewById(R.id.cardview_id)
 
