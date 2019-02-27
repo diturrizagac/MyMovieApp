@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.ui.detail
+package com.belatrixsf.mymovieapp.view.ui.mobile.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,6 +19,7 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        //val fragmentMovieDetailFragment = supportFragmentManager.findFragmentById(R.id.fragment_details_tablet) as MovieDetailFragment?
 
         titleTv = findViewById(R.id.text_title)
         descriptionTv = findViewById(R.id.text_description)
@@ -26,7 +27,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         // Recieve data
         val intent = intent
-        val movie = intent.extras!!.getSerializable("movie") as MovieEntity
+        val movie = intent.extras!!.getSerializable("movie") as MovieEntity // casteo // oncreatemenu
 
         // Setting values
         titleTv!!.text = movie.title
@@ -37,6 +38,8 @@ class MovieDetailActivity : AppCompatActivity() {
             .load("$IMAGE_BASE_URL${movie.poster_path}")
             .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
             .into(imageIv!!)
+
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

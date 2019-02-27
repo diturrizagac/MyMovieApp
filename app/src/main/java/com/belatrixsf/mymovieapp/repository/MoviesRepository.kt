@@ -20,9 +20,15 @@ class MoviesRepository {
     }
 
     companion object {
+        //const val IMAGE_BASE_URL: String = "https://image.tmdb.org/t/p/w500"
         const val BASE_URL = "https://api.themoviedb.org/3/"
         const val MY_API_KEY = "533671e2cdaa4f0f3e33fcd54868f671"
+        const val BASE_POSTER_PATH = "https://image.tmdb.org/t/p/w342"
+        const val BASE_BACKDROP_PATH = "https://image.tmdb.org/t/p/w780"
+        const val YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v="
+        const val YOUTUBE_THUMBNAIL_URL = "https://img.youtube.com/vi/"
         const val LANGUAGE = "en-US"
+
         var repository: MoviesRepository? = null
 
         fun getInstance(): MoviesRepository {
@@ -48,6 +54,34 @@ class MoviesRepository {
     }
 
     fun getMovies(callback: OnGetMoviesCallback) {
+        val allMovies = get().getMovies(
+            MY_API_KEY
+        )
+        allMovies.enqueue(
+            object : Callback<MoviesResponse> {
+
+                override fun onResponse(call: Call<MoviesResponse>, response: Response<MoviesResponse>) {
+                    if (response.isSuccessful) {
+                        val moviesResponse = response.body()
+                        if (moviesResponse?.movies != null) {
+                            callback.onSuccess(moviesResponse.movies!!)
+                        } else {
+                            callback.onError()
+                        }
+                    } else {
+                        callback.onError()
+                    }
+                }
+
+                override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+                    callback.onError()
+                }
+            }
+        )
+
+    }
+
+    fun getPopularMovies(callback: OnGetMoviesCallback){
         val popularMovies = get().getPopularMovies(
             MY_API_KEY
         )
@@ -72,7 +106,33 @@ class MoviesRepository {
                 }
             }
         )
+    }
 
+    fun getTopRatedMovies(callback: OnGetMoviesCallback){
+        val popularMovies = get().getTopRatedMovies(
+            MY_API_KEY
+        )
+        popularMovies.enqueue(
+            object : Callback<MoviesResponse> {
+
+                override fun onResponse(call: Call<MoviesResponse>, response: Response<MoviesResponse>) {
+                    if (response.isSuccessful) {
+                        val moviesResponse = response.body()
+                        if (moviesResponse?.movies != null) {
+                            callback.onSuccess(moviesResponse.movies!!)
+                        } else {
+                            callback.onError()
+                        }
+                    } else {
+                        callback.onError()
+                    }
+                }
+
+                override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+                    callback.onError()
+                }
+            }
+        )
     }
 
 
