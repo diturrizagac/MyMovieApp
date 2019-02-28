@@ -5,22 +5,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
-        android:weightSum="2"
-        android:orientation="horizontal">
+        android:weightSum="1"
+        android:orientation="horizontal"
+        tools:context=".view.ui.tablet.main.MainActivity">
     <fragment
-            android:name="com.belatrixsf.mymovieapp.view.ui.tablet.MovieListFragment"
+            android:name="com.belatrixsf.mymovieapp.view.ui.tablet.main.MovieListFragment"
             android:id="@+id/fragment_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             tools:layout="@layout/fragment_movie_list"/>
 
     <fragment
-            android:name="com.belatrixsf.mymovieapp.view.ui.tablet.MovieDetailFragment"
+            android:name="com.belatrixsf.mymovieapp.view.ui.tablet.detail.MovieDetailFragment"
             android:id="@+id/fragment_details"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             tools:layout="@layout/fragment_movie_detail"/>
+
+    <!--TextView android:layout_width="match_parent" android:layout_height="match_parent"
+    android:text="@string/islandscape"/-->
 
 </LinearLayout>

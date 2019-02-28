@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
-import com.belatrixsf.mymovieapp.model.entity.MovieEntity
+import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
 
@@ -18,6 +18,15 @@ class MovieRecyclerActivity : AppCompatActivity() {
     lateinit var movieList: RecyclerView
     lateinit var movieAdapter: MoviesAdapter
     var moviesRepository = MoviesRepository.getInstance()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_movie_recycler)
+        //moviesRepository = MoviesRepository.getInstance()
+        movieList = findViewById(R.id.movie_recycler_view)
+        movieList.layoutManager = GridLayoutManager(this, 2)
+        showMovies()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -40,22 +49,13 @@ class MovieRecyclerActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_recycler)
-        //moviesRepository = MoviesRepository.getInstance()
-        movieList = findViewById(R.id.movie_recycler_view)
-        movieList.layoutManager = GridLayoutManager(this, 2)
-        showMovies()
-    }
-
     fun showMovies(){
+
         moviesRepository.getMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<MovieEntity>) {
+            override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
                 movieList.adapter = movieAdapter
             }
-
             override fun onError() {
                 Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
                     .show()
@@ -65,7 +65,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
 
     fun showPopularMovies(){
         moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<MovieEntity>) {
+            override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
                 movieList.adapter = movieAdapter
             }
@@ -79,7 +79,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
 
     fun showTopRatedMovies(){
         moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<MovieEntity>) {
+            override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
                 movieList.adapter = movieAdapter
             }

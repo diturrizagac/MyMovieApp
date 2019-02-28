@@ -1,23 +1,27 @@
 package com.belatrixsf.mymovieapp.model.network
 
-import com.belatrixsf.mymovieapp.model.entity.Movie
+import com.belatrixsf.mymovieapp.model.entity.Review
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class MoviesResponse {
+class ReviewResponse {
+    @SerializedName("id")
+    @Expose
+    var id: Int = 0
     @SerializedName("page")
     @Expose
     var page: Int = 0
 
-    @SerializedName("total_results")
-    @Expose
-    var totalResults: Int = 0
-
     @SerializedName("results")
     @Expose
-    var movies: List<Movie>? = null
+    var results: List<Review>?= null
 
     @SerializedName("total_pages")
     @Expose
-    var totalPages: Int = 0
+    var total_pages: Int = 0
+
+    @SerializedName("total_results")
+    @Expose
+    var total_results: Int = 0
+
 }

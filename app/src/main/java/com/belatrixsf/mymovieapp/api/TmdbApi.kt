@@ -1,15 +1,18 @@
 package com.belatrixsf.mymovieapp.api
 
 import com.belatrixsf.mymovieapp.model.network.MoviesResponse
+import com.belatrixsf.mymovieapp.model.network.ReviewResponse
+import com.belatrixsf.mymovieapp.model.network.VideoResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
 interface TmdbApi {
-    @GET ("discover/movie?sort_by=popularity.asc")// discover/movie
+    @GET("discover/movie?sort_by=popularity.asc")// discover/movie
     fun getMovies(
-        @Query("api_key") apiKey:String
+        @Query("api_key") apiKey: String
     ): Call<MoviesResponse>
 
     @GET("movie/popular")
@@ -21,4 +24,17 @@ interface TmdbApi {
     fun getTopRatedMovies(
         @Query("api_key") apiKey: String
     ): Call<MoviesResponse>
+
+    @GET("/movie/{movie_id}/videos")
+    fun getVideos(
+        @Query("api_key") apiKey: String,
+        @Path("movie_id") movieId: String
+    ): Call<VideoResponse>
+
+    @GET("/movie/{movie_id}/reviews")
+    fun getReviews(
+        @Query("api_key") apiKey: String,
+        @Path("movie_id") movieId:String
+    ): Call<ReviewResponse>
+
 }
