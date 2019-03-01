@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
-import com.belatrixsf.mymovieapp.view.ui.tablet.OnMessageListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.fragment_movie_detail.*
+import kotlinx.android.synthetic.main.layout_detail_body.*
+import kotlinx.android.synthetic.main.layout_detail_header.*
 
 class MovieDetailFragment : Fragment() {
-
-    lateinit var listener: OnMessageListener
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,12 +25,13 @@ class MovieDetailFragment : Fragment() {
     }
 
     fun displayDetail(movie: Movie){
-        text_title_fragment.text = movie.title
-        text_description_fragment.text = movie.overview
-        text_duration_fragment.text = movie.popularity.toString()
+        detail_header_title.text = movie.title
+        detail_header_release.text = "Release Date : ${movie.release_date}"
+        detail_header_star.rating = movie.vote_average /2
+        detail_body_overview.text= movie.overview
         Glide.with(this)
-            .load("${MoviesAdapter.IMAGE_BASE_URL}${movie.poster_path}")
+            .load("${MoviesAdapter.IMAGE_BASE_URL}${movie.backdrop_path}")
             .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
-            .into(image_poster_path_fragment)
+            .into(movie_detail_poster)
     }
 }

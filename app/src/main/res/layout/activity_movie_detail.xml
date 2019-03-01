@@ -41,7 +41,6 @@
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
-
     </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -102,5 +101,4 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </LinearLayout>

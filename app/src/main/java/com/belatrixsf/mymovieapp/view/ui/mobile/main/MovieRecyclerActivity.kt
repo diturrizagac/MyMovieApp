@@ -22,7 +22,6 @@ class MovieRecyclerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_recycler)
-        //moviesRepository = MoviesRepository.getInstance()
         movieList = findViewById(R.id.movie_recycler_view)
         movieList.layoutManager = GridLayoutManager(this, 2)
         showMovies()
@@ -49,7 +48,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
     }
 
 
-    fun showMovies(){
+    private fun showMovies(){
 
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
@@ -63,7 +62,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
         })
     }
 
-    fun showPopularMovies(){
+    private fun showPopularMovies(){
         moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
@@ -77,7 +76,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
         })
     }
 
-    fun showTopRatedMovies(){
+    private fun showTopRatedMovies(){
         moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)

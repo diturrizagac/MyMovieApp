@@ -36,10 +36,9 @@ class MovieDetailActivity : AppCompatActivity() {
         //val fragmentMovieDetailFragment = supportFragmentManager.findFragmentById(R.id.fragment_details_tablet) as MovieDetailFragment?
         initializeUI()
         //showVideos(id)
-
     }
 
-    fun initializeUI(){
+    private fun initializeUI(){
         titleTv = findViewById(R.id.detail_header_title)
         overviewTv = findViewById(R.id.detail_body_overview)
         releaseDateTv = findViewById(R.id.detail_header_release)
@@ -57,7 +56,7 @@ class MovieDetailActivity : AppCompatActivity() {
         voteAverageTv!!.rating = movie.vote_average /2
         Glide.with(this)
             .load("$IMAGE_BASE_URL${movie.backdrop_path}")
-            .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
+            .apply(RequestOptions.placeholderOf(R.color.background900))
             .into(imageIv!!)
 
     }

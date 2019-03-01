@@ -8,15 +8,16 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
-import com.belatrixsf.mymovieapp.view.ui.tablet.OnMessageListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class MoviesAdapterFragment(private val movies: List<Movie>, private val mContext: Context) : RecyclerView.Adapter<MoviesAdapterFragment.MovieViewHolder>(), OnMessageListener {
-    val IMAGE_BASE_URL: String = "https://image.tmdb.org/t/p/w342"
-    lateinit var listener: OnMessageListener
+class MoviesAdapterFragment(private val movies: List<Movie>, private val mContext: Context) :
+    RecyclerView.Adapter<MoviesAdapterFragment.MovieViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesAdapterFragment.MovieViewHolder {
+    var listenerAdapter: OnItemClickListener ?= null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            MoviesAdapterFragment.MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_card_view, parent, false)
         return MovieViewHolder(view)
     }
@@ -30,9 +31,6 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
         holder.bind(movie)
     }
 
-    override fun getAndSendInformationFromAdapter(movie: Movie) {
-    }
-
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var image: ImageView = itemView.findViewById(R.id.movie_img_id)
 
@@ -40,11 +38,8 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
             val position = adapterPosition
             if(position != RecyclerView.NO_POSITION){
                 val movieSelected = movies[position]
-                getAndSendInformationFromAdapter(movieSelected)
-//                val intent = Intent(mContext,MovieDetailFragment::class.java )
-//                intent.putExtra("movie", movieSelected)
-//                intent.putExtra("id", movieSelected.id)
-//                mContext.startActivity(intent)
+                if(listenerAdapter!=null)
+                    listenerAdapter!!.getItemMovie(movieSelected)
             }
         }
 
@@ -57,5 +52,7 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
 
     }
 
-
+    interface OnItemClickListener {
+        fun getItemMovie(movie: Movie)
+    }
 }

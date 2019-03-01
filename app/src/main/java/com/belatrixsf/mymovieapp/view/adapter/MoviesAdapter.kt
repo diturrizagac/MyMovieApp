@@ -54,7 +54,7 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
             //title.text = movie.title
             Glide.with(itemView)
                 .load("$IMAGE_BASE_URL${movie.poster_path}")
-                .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
+                .apply(RequestOptions.placeholderOf(R.color.background900))
                 .into(image)
         }
 

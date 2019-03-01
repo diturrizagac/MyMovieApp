@@ -2,47 +2,51 @@ package com.belatrixsf.mymovieapp.view.ui.tablet.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.fragment.app.FragmentManager
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
-import com.belatrixsf.mymovieapp.view.ui.tablet.OnMessageListener
 import com.belatrixsf.mymovieapp.view.ui.tablet.detail.MovieDetailFragment
 
 
-class MainActivity : AppCompatActivity(), OnMessageListener {
+class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener {
     lateinit var fragmentManager: FragmentManager
     lateinit var movieListFragment: MovieListFragment
     lateinit var movieDetailFragment: MovieDetailFragment
 
-    private var isDualPanel = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        fragmentManager = supportFragmentManager
-        movieListFragment = fragmentManager.findFragmentById(R.id.fragment_list) as MovieListFragment
-        movieDetailFragment = fragmentManager.findFragmentById(R.id.fragment_details) as MovieDetailFragment
         var hola =getString(R.string.islandscape)
 
-        //val fragmentMovieDetail = findViewById<View>(R.id.fragment_details)
-        //isDualPanel = movieDetailFragment?.visibility == View.VISIBLE
+        fragmentManager = supportFragmentManager
+        movieDetailFragment = fragmentManager.findFragmentById(R.id.fragment_details) as MovieDetailFragment
+        movieListFragment = fragmentManager.findFragmentById(R.id.fragment_list) as MovieListFragment
     }
 
-
-    override fun getAndSendInformationFromAdapter(movie: Movie) {
-        //movieListFragment.bringMovie(movie, )
+    override fun sendMovie(movie: Movie) {
         movieDetailFragment.displayDetail(movie)
     }
 
-    /*override fun displayDetail(movie: Movie) {
-        if (isDualPanel) { // If we are in Tablet
-            val movieDetailFragment= supportFragmentManager.findFragmentById(R.id.fragment_details) as MovieDetailFragment?
-            movieDetailFragment?.displayDetail(movie)
-        } else { // When we are in Smart phone
-            val intent = Intent(this, MovieDetailActivity::class.java)
-            intent.putExtra("movie", movie)
-            startActivity(intent)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item!!.itemId){
+            R.id.option_popular_movies -> {
+
+                true
+            }
+            R.id.option_rated_movies -> {
+                //showTopRatedMovies()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-    }*/
+    }
 }
