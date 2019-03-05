@@ -1,6 +1,9 @@
 package com.belatrixsf.mymovieapp.repository
 
+import android.util.Log
 import com.belatrixsf.mymovieapp.OnGetVideoCallback
+import com.belatrixsf.mymovieapp.api.Api.BASE_URL
+import com.belatrixsf.mymovieapp.api.Api.MY_API_KEY
 import com.belatrixsf.mymovieapp.api.TmdbApi
 import com.belatrixsf.mymovieapp.model.network.VideoResponse
 import retrofit2.Call
@@ -17,18 +20,13 @@ class VideosRepository {
     }
 
     companion object {
-        //const val IMAGE_BASE_URL: String = "https://image.tmdb.org/t/p/w500"
-        const val BASE_URL = "https://api.themoviedb.org/3/"
-        const val YOUTUBE_THUMBNAIL_URL = "https://img.youtube.com/vi/"
-        const val MY_API_KEY = "533671e2cdaa4f0f3e33fcd54868f671"
-        const val LANGUAGE = "en-US"
 
         var repository: VideosRepository? = null
 
         fun getInstance(): VideosRepository {
             if (repository == null) {
                 val retrofit = Retrofit.Builder()
-                    .baseUrl(YOUTUBE_THUMBNAIL_URL)
+                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 
@@ -40,20 +38,18 @@ class VideosRepository {
 
         fun get(): TmdbApi {
             val retrofit = Retrofit.Builder()
-                .baseUrl(YOUTUBE_THUMBNAIL_URL)
+                .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             return retrofit.create<TmdbApi>(TmdbApi::class.java)
         }
     }
 
-    fun getVideos(id:String, callback: OnGetVideoCallback) {
-        val allVideos = get().getVideos(
-            MY_API_KEY, id
-        )
+    fun getVideos(callback: OnGetVideoCallback, id: Int) {
+        val allVideos = get().getVideos(id,MY_API_KEY)
+        Log.i("url videoss",allVideos.request().url().toString())
         allVideos.enqueue(
             object : Callback<VideoResponse> {
-
                 override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
                     if (response.isSuccessful) {
                         val videosResponse = response.body()
@@ -72,6 +68,5 @@ class VideosRepository {
                 }
             }
         )
-
     }
 }

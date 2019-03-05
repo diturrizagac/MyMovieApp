@@ -51,7 +51,7 @@ class ReviewsRepository {
 
     fun getReviews(callback: OnGetReviewCallback, id:String) {
         val allReviews = ReviewsRepository.get().getReviews(
-            MY_API_KEY, id
+            1
         )
         allReviews.enqueue(
             object : Callback<ReviewResponse> {

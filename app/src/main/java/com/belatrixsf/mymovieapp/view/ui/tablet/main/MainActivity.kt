@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener 
         movieListFragment = fragmentManager.findFragmentById(R.id.fragment_list) as MovieListFragment
     }
 
+    //Bring data from FragmentList
     override fun sendMovie(movie: Movie) {
         movieDetailFragment.displayDetail(movie)
     }

@@ -1,23 +1,21 @@
 package com.belatrixsf.mymovieapp.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.R
-import com.belatrixsf.mymovieapp.model.entity.Movie
+import com.belatrixsf.mymovieapp.api.Api.YOUTUBE_THUMBNAIL_URL
 import com.belatrixsf.mymovieapp.model.entity.Video
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class VideoAdapter(private val videos: List<Video>) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
-    companion object {
-        val YOUTUBE_THUMBNAIL_URL = "https://img.youtube.com/vi/"
-        val YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v="
-    }
+class VideoAdapter(private val videos: List<Video>, private val mContext: Context) : RecyclerView.Adapter<VideoAdapter.VideoViewHolder>() {
 
+    var listenerAdapter: OnClickItemVideoAdapterListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoAdapter.VideoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video, parent, false)
@@ -30,6 +28,7 @@ class VideoAdapter(private val videos: List<Video>) : RecyclerView.Adapter<Video
 
     override fun onBindViewHolder(holder: VideoAdapter.VideoViewHolder, position: Int) {
         val video = videos[position]
+        holder.bindVideo(video)
     }
 
     inner class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,18 +38,22 @@ class VideoAdapter(private val videos: List<Video>) : RecyclerView.Adapter<Video
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 val videoSelected = videos[position]
-
+                if(listenerAdapter!=null)
+                    listenerAdapter!!.goToYoutubeIntent(videoSelected)
             }
         }
 
         fun bindVideo(video: Video) {
-            //itemView.setOnClickListener(onClickListener)
-            //title.text = movie.title
+            Log.i("videooo","$YOUTUBE_THUMBNAIL_URL${video.key}/default.jpg")
             Glide.with(itemView)
                 .load("$YOUTUBE_THUMBNAIL_URL${video.key}/default.jpg")
                 .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
                 .into(imageVideo)
         }
-
     }
+
+    interface OnClickItemVideoAdapterListener{
+        fun goToYoutubeIntent(video:Video)
+    }
+
 }

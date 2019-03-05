@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.R
+import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.view.ui.mobile.detail.MovieDetailActivity
 import com.bumptech.glide.Glide
@@ -15,10 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 
 
 class MoviesAdapter(private val movies: List<Movie>, private val mContext: Context) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
-    companion object {
-        val IMAGE_BASE_URL: String = "https://image.tmdb.org/t/p/w342"
 
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_card_view, parent, false)
         return MovieViewHolder(view)
@@ -34,9 +32,7 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
     }
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        //var title: TextView = itemView.findViewById(R.id.movie_title_id)
-        var image: ImageView = itemView.findViewById(R.id.movie_img_id)
+        var image: ImageView = itemView.findViewById(R.id.movie_img_id) //item_video_cover
 
         val myView = itemView.setOnClickListener {
             val position = adapterPosition
@@ -50,8 +46,6 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
         }
 
         fun bind(movie: Movie) {
-            //itemView.setOnClickListener(onClickListener)
-            //title.text = movie.title
             Glide.with(itemView)
                 .load("$IMAGE_BASE_URL${movie.poster_path}")
                 .apply(RequestOptions.placeholderOf(R.color.background900))

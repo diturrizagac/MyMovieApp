@@ -10,6 +10,7 @@ import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 
 class MoviesAdapterFragment(private val movies: List<Movie>, private val mContext: Context) :
     RecyclerView.Adapter<MoviesAdapterFragment.MovieViewHolder>() {
@@ -45,7 +46,7 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
 
         fun bind(movie: Movie) {
             Glide.with(itemView)
-                .load("${MoviesAdapter.IMAGE_BASE_URL}${movie.poster_path}")
+                .load("$IMAGE_BASE_URL${movie.poster_path}")
                 .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
                 .into(image)
         }

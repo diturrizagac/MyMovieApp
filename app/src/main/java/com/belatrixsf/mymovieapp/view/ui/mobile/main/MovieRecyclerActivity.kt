@@ -23,7 +23,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_recycler)
         movieList = findViewById(R.id.movie_recycler_view)
-        movieList.layoutManager = GridLayoutManager(this, 2)
+        movieList.layoutManager = GridLayoutManager(this, 2) as RecyclerView.LayoutManager?
         showMovies()
     }
 

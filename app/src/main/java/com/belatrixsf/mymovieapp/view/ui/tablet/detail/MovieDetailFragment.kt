@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.belatrixsf.mymovieapp.R
+import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
 import com.bumptech.glide.Glide
@@ -30,7 +31,7 @@ class MovieDetailFragment : Fragment() {
         detail_header_star.rating = movie.vote_average /2
         detail_body_overview.text= movie.overview
         Glide.with(this)
-            .load("${MoviesAdapter.IMAGE_BASE_URL}${movie.backdrop_path}")
+            .load("$IMAGE_BASE_URL${movie.backdrop_path}")
             .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
             .into(movie_detail_poster)
     }

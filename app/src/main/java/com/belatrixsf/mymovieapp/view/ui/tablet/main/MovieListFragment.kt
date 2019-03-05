@@ -22,8 +22,6 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     lateinit var moviesRepository: MoviesRepository
     var listenerListFragment: OnMovieListListener? = null
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +40,7 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapterFragment(movies, rootView.context)
-                //connect Frsgm - Adapter
+                //connect Fragment - Adapter
                 setListener()
                 movieList.adapter = movieAdapter
             }

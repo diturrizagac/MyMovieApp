@@ -17,6 +17,7 @@
         android:textColor="@color/white"
         android:textSize="27sp"
         android:textStyle="bold"
+        android:visibility="gone"
         tools:text="Star Wars: The Last Jedi" />
 
     <TextView
@@ -37,5 +38,4 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         tools:rating="3.5f" />
-
 </LinearLayout>

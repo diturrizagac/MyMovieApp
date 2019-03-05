@@ -9,6 +9,14 @@
         <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/background900</item>
+        <item name="colorPrimaryDark">@color/background900</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
 
     <style name="TextStyle" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@android:color/white</item>

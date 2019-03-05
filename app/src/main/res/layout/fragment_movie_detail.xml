@@ -7,16 +7,19 @@
         android:layout_height="match_parent"
         android:background="@color/background"
         android:orientation="vertical"
+        android:fitsSystemWindows="true"
         tools:context=".view.ui.tablet.detail.MovieDetailFragment">
 
     <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="280dp">
+            android:layout_height="280dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
         <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/detail_collapse_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/background"
-                app:contentScrim="@color/colorPrimary"
+                app:contentScrim="@color/background900"
                 app:expandedTitleGravity="top|left"
                 app:expandedTitleTextAppearance="@style/CollapsedExpandedTitleText"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">

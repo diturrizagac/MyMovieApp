@@ -25,16 +25,16 @@ interface TmdbApi {
         @Query("api_key") apiKey: String
     ): Call<MoviesResponse>
 
-    @GET("/movie/{movie_id}/videos")
+    @GET("movie/{movie_id}/videos")
     fun getVideos(
-        @Query("api_key") apiKey: String,
-        @Path("movie_id") movieId: String
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
     ): Call<VideoResponse>
 
     @GET("/movie/{movie_id}/reviews")
     fun getReviews(
-        @Query("api_key") apiKey: String,
-        @Path("movie_id") movieId:String
+        //@Query("api_key") apiKey: String,
+        @Path("movie_id") movieId:Int
     ): Call<ReviewResponse>
 
 }
