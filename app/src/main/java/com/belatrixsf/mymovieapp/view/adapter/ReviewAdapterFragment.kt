@@ -11,10 +11,12 @@ import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Review
 import com.ms.square.android.expandabletextview.ExpandableTextView
 
-class ReviewAdapter(private val reviews: List<Review>, mContext: Context): RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>(){
+class ReviewAdapterFragment(private val reviews: List<Review>, private val mContext: Context) :
+    RecyclerView.Adapter<ReviewAdapterFragment.ReviewViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewAdapter.ReviewViewHolder {
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.item_review,parent,false)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_review,parent,false)
         return ReviewViewHolder(view)
     }
 
@@ -22,10 +24,12 @@ class ReviewAdapter(private val reviews: List<Review>, mContext: Context): Recyc
         return reviews.size
     }
 
-    override fun onBindViewHolder(holder: ReviewAdapter.ReviewViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviews[position]
         holder.bindReview(review)
+
     }
+
 
     inner class ReviewViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         var titleReview: TextView = itemView.findViewById(R.id.item_review_title)
@@ -36,5 +40,6 @@ class ReviewAdapter(private val reviews: List<Review>, mContext: Context): Recyc
             titleReview.text = review.author
             expandTextReview.text = review.content
         }
+
     }
 }

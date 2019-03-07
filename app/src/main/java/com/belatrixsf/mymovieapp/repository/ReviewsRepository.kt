@@ -1,10 +1,11 @@
 package com.belatrixsf.mymovieapp.repository
 
+import android.util.Log
 import com.belatrixsf.mymovieapp.OnGetReviewCallback
+import com.belatrixsf.mymovieapp.api.Api.BASE_URL
+import com.belatrixsf.mymovieapp.api.Api.MY_API_KEY
 import com.belatrixsf.mymovieapp.api.TmdbApi
-import com.belatrixsf.mymovieapp.model.network.MoviesResponse
 import com.belatrixsf.mymovieapp.model.network.ReviewResponse
-import com.belatrixsf.mymovieapp.view.ui.mobile.detail.MovieDetailActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,39 +21,34 @@ class ReviewsRepository {
     }
 
     companion object {
-        const val YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v="
-        const val YOUTUBE_THUMBNAIL_URL = "https://img.youtube.com/vi/"
-        const val BASE_URL = "https://api.themoviedb.org/3/"
-        const val MY_API_KEY = "533671e2cdaa4f0f3e33fcd54868f671"
         var repository: ReviewsRepository? = null
 
         //singleton pattern
         fun getInstance(): ReviewsRepository {
-            if (ReviewsRepository.repository == null) {
+            if (repository == null) {
                 val retrofit = Retrofit.Builder()
-                    .baseUrl(ReviewsRepository.BASE_URL)
+                    .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 
-                ReviewsRepository.repository = ReviewsRepository(retrofit.create<TmdbApi>(TmdbApi::class.java))
+                repository = ReviewsRepository(retrofit.create<TmdbApi>(TmdbApi::class.java))
             }
 
-            return ReviewsRepository.repository as ReviewsRepository
+            return repository as ReviewsRepository
         }
 
         fun get(): TmdbApi {
             val retrofit = Retrofit.Builder()
-                .baseUrl(ReviewsRepository.BASE_URL)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             return retrofit.create<TmdbApi>(TmdbApi::class.java)
         }
     }
 
-    fun getReviews(callback: OnGetReviewCallback, id:String) {
-        val allReviews = ReviewsRepository.get().getReviews(
-            1
-        )
+    fun getReviews(callback: OnGetReviewCallback, id:Int) {
+        val allReviews = get().getReviews(id,MY_API_KEY)
+        Log.i("url reviews",allReviews.request().url().toString())
         allReviews.enqueue(
             object : Callback<ReviewResponse> {
                 override fun onResponse(call: Call<ReviewResponse>, response: Response<ReviewResponse>) {

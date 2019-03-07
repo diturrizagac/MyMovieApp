@@ -38,7 +38,7 @@ class VideosRepository {
 
         fun get(): TmdbApi {
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             return retrofit.create<TmdbApi>(TmdbApi::class.java)

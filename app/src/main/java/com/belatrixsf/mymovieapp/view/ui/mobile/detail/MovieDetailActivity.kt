@@ -1,28 +1,34 @@
 package com.belatrixsf.mymovieapp.view.ui.mobile.detail
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.belatrixsf.mymovieapp.OnGetReviewCallback
 import com.belatrixsf.mymovieapp.OnGetVideoCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 import com.belatrixsf.mymovieapp.api.Api.YOUTUBE_VIDEO_URL
 import com.belatrixsf.mymovieapp.model.entity.Movie
+import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
+import com.belatrixsf.mymovieapp.repository.ReviewsRepository
 import com.belatrixsf.mymovieapp.repository.VideosRepository
+import com.belatrixsf.mymovieapp.view.adapter.ReviewAdapter
 import com.belatrixsf.mymovieapp.view.adapter.VideoAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.gson.Gson
 
 class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAdapterListener {
     private var titleTv: TextView? = null
@@ -30,51 +36,59 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     private var releaseDateTv: TextView? = null
     private var overviewTv: TextView? = null
     private var voteAverageTv: RatingBar? = null
-    lateinit var id : String
     lateinit var videoList: RecyclerView
+    lateinit var reviewList: RecyclerView
     private var videoAdapter : VideoAdapter? = null
+    private var reviewAdapter : ReviewAdapter? = null
     private var videosRepository = VideosRepository.getInstance()
+    private var reviewRepository = ReviewsRepository.getInstance()
     lateinit var movie : Movie
     lateinit var toolbar:Toolbar
     lateinit var collapsingToolbar : CollapsingToolbarLayout
     lateinit var appBar : AppBarLayout
-    lateinit var layoutManagerR: LinearLayoutManager
-    lateinit var nestedScrollView: NestedScrollView
+    lateinit var favoriteBtn : Button
 
     @SuppressWarnings("ConstantConditions")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
+
         initializeUI()
         showVideos()
+        showReviews()
     }
 
+
+    @SuppressLint("WrongConstant")
     private fun initializeUI(){
         titleTv = findViewById(R.id.detail_header_title)
         overviewTv = findViewById(R.id.detail_body_overview)
         releaseDateTv = findViewById(R.id.detail_header_release)
         voteAverageTv = findViewById(R.id.detail_header_star)
         imageIv = findViewById(R.id.movie_detail_poster)
-        videoList = findViewById(R.id.detail_body_recyclerView_trailers)
+
         toolbar = findViewById(R.id.movie_detail_toolbar)
         collapsingToolbar = findViewById(R.id.detail_collapse_toolbar)
         appBar = findViewById(R.id.details_appBar)
-        nestedScrollView = findViewById(R.id.details_nested_scrollView)
-        layoutManagerR = LinearLayoutManager(this)
+        favoriteBtn = findViewById(R.id.detail_favorite_button)
+
+        videoList = findViewById(R.id.detail_body_recyclerView_trailers)
+        reviewList = findViewById(R.id.detail_body_recyclerView_reviews)
+
 
         //arction bar
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        //collapsing
-
         //setting Videos
         videoList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        //setting Reviews
+        reviewList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
 
         // Recieve data
         val movie = intent.extras!!.getSerializable("movie") as Movie // casteo // oncreatemenu
-        id = movie.id.toString()
-        getMovie(movie)
+        //id = movie.id.toString()
+        this.movie = movie
 
         // Setting values
         collapsingToolbar.title = movie.title
@@ -86,6 +100,36 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             .load("$IMAGE_BASE_URL${movie.backdrop_path}")
             .apply(RequestOptions.placeholderOf(R.color.background900))
             .into(imageIv!!)
+
+
+        if(isFavorite()){
+            favoriteBtn.text = "<3"
+        } else {
+            favoriteBtn.text = "Mark as Favorite"
+        }
+        favoriteBtn.setOnClickListener {
+            saveMovieAsFavorite(movie)
+        }
+    }
+
+    fun isFavorite():Boolean{
+        val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
+        val allPreferences = sharedPreferences.all
+        val item =  allPreferences.entries.iterator()
+
+        while (item.hasNext()){
+            val pair = item.next()
+            //trae el favorite como json a traves de una llave
+            val sMov = sharedPreferences.getString(pair.key, "")
+            //convierte el json en objeto
+            val objMovie = Gson().fromJson(sMov, Movie::class.java)
+            //favoritesM.add(objMovie)
+            //Log.i("check movie", "${objMovie.title}")
+            if (objMovie.id== this.movie.id)
+                return true
+        }
+        return false
+        //Log.i("favoritos", allPreferences.size.toString())
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -98,7 +142,7 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             object: OnGetVideoCallback {
                 override fun onSuccess(videos: List<Video>) {
                     videoAdapter = VideoAdapter(videos,this@MovieDetailActivity)
-                    setListener()
+                    setListenerVideo()
                     videoList.adapter = videoAdapter
                 }
                 override fun onError() {
@@ -109,12 +153,25 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             }, movie.id
         )
     }
+    private fun showReviews(){
+        reviewRepository.getReviews(
+            object: OnGetReviewCallback{
+                override fun onSuccess(reviews: List<Review>) {
+                    reviewAdapter = ReviewAdapter(reviews,this@MovieDetailActivity)
+                    //listener
+                    reviewList.adapter = reviewAdapter
+                }
 
-    private fun getMovie(movie:Movie){
-        this.movie = movie
+                override fun onError() {
+                    Toast.makeText(this@MovieDetailActivity, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+            },movie.id
+        )
     }
 
-    private fun setListener() {
+    private fun setListenerVideo() {
         videoAdapter!!.listenerAdapter = this
 
     }
@@ -126,4 +183,23 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         startActivity(intent)
     }
 
+
+    private fun saveMovieAsFavorite(movieAux:Movie){
+        val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        val sMovie = Gson().toJson(movieAux)
+
+        if(favoriteBtn.text.equals("Mark as Favorite")){
+            //saving data on Shared Preferences
+            Log.i("check movieAux", sMovie)
+            editor.putString(movieAux.id.toString(), sMovie)
+            editor.apply()
+            favoriteBtn.text = "<3"
+        } else {
+            editor.remove(movieAux.id.toString())
+            editor.commit()
+            favoriteBtn.text = "Mark as Favorite"
+            Log.i("removing movieAux",sMovie)
+        }
+    }
 }

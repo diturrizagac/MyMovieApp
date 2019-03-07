@@ -17,8 +17,7 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
 
     var listenerAdapter: OnItemClickListener ?= null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
-            MoviesAdapterFragment.MovieViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_card_view, parent, false)
         return MovieViewHolder(view)
     }

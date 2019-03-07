@@ -1,7 +1,9 @@
 package com.belatrixsf.mymovieapp.view.ui.mobile.main
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,8 +15,9 @@ import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
+import com.google.gson.Gson
 
-class MovieRecyclerActivity : AppCompatActivity() {
+class MovieRecyclerActivity : AppCompatActivity(){
     lateinit var movieList: RecyclerView
     lateinit var movieAdapter: MoviesAdapter
     var moviesRepository = MoviesRepository.getInstance()
@@ -23,7 +26,7 @@ class MovieRecyclerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_recycler)
         movieList = findViewById(R.id.movie_recycler_view)
-        movieList.layoutManager = GridLayoutManager(this, 2) as RecyclerView.LayoutManager?
+        movieList.layoutManager = GridLayoutManager(this, 3)
         showMovies()
     }
 
@@ -35,6 +38,10 @@ class MovieRecyclerActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item!!.itemId){
+            R.id.option_main -> {
+                showPopularMovies()
+                true
+            }
             R.id.option_popular_movies -> {
                 showPopularMovies()
                 true
@@ -43,13 +50,16 @@ class MovieRecyclerActivity : AppCompatActivity() {
                 showTopRatedMovies()
                 true
             }
+            R.id.option_favorites -> {
+                showFavorites()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
 
     private fun showMovies(){
-
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
@@ -88,5 +98,26 @@ class MovieRecyclerActivity : AppCompatActivity() {
                     .show()
             }
         })
+    }
+
+    private fun showFavorites(){
+        val favoritesM = ArrayList<Movie>()
+        val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
+        val allPreferences = sharedPreferences.all
+        val item =  allPreferences.entries.iterator()
+
+        while (item.hasNext()){
+            val pair = item.next()
+            //trae el favorite como json a traves de una llave
+            val sMov = sharedPreferences.getString(pair.key, "")
+            //convierte el json en objeto
+            val objMovie = Gson().fromJson(sMov, Movie::class.java)
+            favoritesM.add(objMovie)
+            Log.i("check movie", objMovie.title)
+        }
+        Log.i("favoritos", allPreferences.size.toString())
+
+        movieAdapter = MoviesAdapter(favoritesM,this)
+        movieList.adapter = movieAdapter
     }
 }

@@ -22,9 +22,13 @@ class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener 
         var hola =getString(R.string.islandscape)
 
         fragmentManager = supportFragmentManager
-        movieDetailFragment = fragmentManager.findFragmentById(R.id.fragment_details) as MovieDetailFragment
         movieListFragment = fragmentManager.findFragmentById(R.id.fragment_list) as MovieListFragment
+        if(hola.equals("true")){
+            movieDetailFragment = fragmentManager.findFragmentById(R.id.fragment_details) as MovieDetailFragment
+        }
     }
+
+
 
     //Bring data from FragmentList
     override fun sendMovie(movie: Movie) {
@@ -39,12 +43,20 @@ class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener 
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item!!.itemId){
+            R.id.option_main -> {
+                movieListFragment.showMovies()
+                true
+            }
             R.id.option_popular_movies -> {
-
+                movieListFragment.showPopularMovies()
                 true
             }
             R.id.option_rated_movies -> {
-                //showTopRatedMovies()
+                movieListFragment.showTopRatedMovies()
+                true
+            }
+            R.id.option_favorites -> {
+                movieListFragment.showFavorites()
                 true
             }
             else -> super.onOptionsItemSelected(item)
