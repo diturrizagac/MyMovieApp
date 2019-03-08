@@ -3,6 +3,7 @@ package com.belatrixsf.mymovieapp.view.ui.mobile.main
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,6 +13,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_ID
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_POSTER_PATH
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_RATING
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_RELEASE
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_TITLE
+import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
@@ -21,6 +29,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
     lateinit var movieList: RecyclerView
     lateinit var movieAdapter: MoviesAdapter
     var moviesRepository = MoviesRepository.getInstance()
+    private var dbHelper = FavoriteDbHelper(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +48,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item!!.itemId){
             R.id.option_main -> {
-                showPopularMovies()
+                showMovies()
                 true
             }
             R.id.option_popular_movies -> {
@@ -51,7 +60,8 @@ class MovieRecyclerActivity : AppCompatActivity(){
                 true
             }
             R.id.option_favorites -> {
-                showFavorites()
+                //showFavorites()
+                showFavoritesSQLite()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -117,6 +127,12 @@ class MovieRecyclerActivity : AppCompatActivity(){
         }
         Log.i("favoritos", allPreferences.size.toString())
 
+        movieAdapter = MoviesAdapter(favoritesM,this)
+        movieList.adapter = movieAdapter
+    }
+
+    private fun showFavoritesSQLite(){
+        val favoritesM = dbHelper.allFavorites
         movieAdapter = MoviesAdapter(favoritesM,this)
         movieList.adapter = movieAdapter
     }

@@ -19,57 +19,56 @@ class Movie(
     overview: String,
     release_date: String
 ): Serializable {
-
     @SerializedName("vote_count")
     @Expose
-    val vote_count = vote_count
+    var vote_count = vote_count
 
     @SerializedName("id")
     @Expose
-    val id = id
+    var id = id
 
     @SerializedName("vote_average")
     @Expose
-    val vote_average = vote_average
+    var vote_average = vote_average
 
     @SerializedName("title")
     @Expose
-    val title = title
+    var title = title
 
     @SerializedName("popularity")
     @Expose
-    val popularity = popularity
+    var popularity = popularity
 
     @SerializedName("poster_path")
     @Expose
-    val poster_path = poster_path
+    var poster_path = poster_path
 
     @SerializedName("original_language")
     @Expose
-    val original_language= original_language
+    var original_language= original_language
 
     @SerializedName("original_title")
     @Expose
-    val original_title = original_title
+    var original_title = original_title
 
     @SerializedName("genre_ids")
     @Expose
-    val genre_ids = genre_ids
+    var genre_ids = genre_ids
 
     @SerializedName("backdrop_path")
     @Expose
-    val backdrop_path = backdrop_path
+    var backdrop_path = backdrop_path
 
     @SerializedName("adult")
     @Expose
-    val adult = adult
+    var adult = adult
 
     @SerializedName("overview")
     @Expose
-    val overview= overview
+    var overview= overview
 
     @SerializedName("release_date")
     @Expose
-    val release_date = release_date
+    var release_date = release_date
 
 }

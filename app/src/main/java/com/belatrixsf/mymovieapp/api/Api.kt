@@ -7,6 +7,5 @@ object Api {
     const val YOUTUBE_THUMBNAIL_URL = "https://img.youtube.com/vi/"
     const val YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v="
     const val LANGUAGE = "en-US"
-
     //const val IMAGE_BASE_URL: String = "https://image.tmdb.org/t/p/w500"
 }

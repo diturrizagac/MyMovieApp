@@ -17,6 +17,7 @@ import com.belatrixsf.mymovieapp.OnGetVideoCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 import com.belatrixsf.mymovieapp.api.Api.YOUTUBE_VIDEO_URL
+import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
@@ -47,6 +48,7 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     lateinit var collapsingToolbar : CollapsingToolbarLayout
     lateinit var appBar : AppBarLayout
     lateinit var favoriteBtn : Button
+    private var favoriteDbHelper = FavoriteDbHelper(this)
 
     @SuppressWarnings("ConstantConditions")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,26 +104,41 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             .into(imageIv!!)
 
 
-        if(isFavorite()){
+        if(isFavoriteInSQLite()){
             favoriteBtn.text = "<3"
         } else {
             favoriteBtn.text = "Mark as Favorite"
         }
+
         favoriteBtn.setOnClickListener {
-            saveMovieAsFavorite(movie)
+            //save as favorite using SQL
+            saveMovieAsFavoriteSQLite(movie)
+
+            //method to save as favorite using SharedPreference
+            //saveMovieAsFavorite(movie)
         }
     }
 
-    fun isFavorite():Boolean{
+    private fun isFavoriteInSQLite():Boolean{
+        val favoritesDb = favoriteDbHelper.allFavorites
+        if(favoritesDb.contains(movie)){
+            Log.i("movie", "IsFavorite")
+            return true
+        }
+        return false
+    }
+
+
+    private fun isFavorite():Boolean{
         val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
         val allPreferences = sharedPreferences.all
         val item =  allPreferences.entries.iterator()
 
         while (item.hasNext()){
             val pair = item.next()
-            //trae el favorite como json a traves de una llave
+            //bring favorite as json through key
             val sMov = sharedPreferences.getString(pair.key, "")
-            //convierte el json en objeto
+            //convert json to object
             val objMovie = Gson().fromJson(sMov, Movie::class.java)
             //favoritesM.add(objMovie)
             //Log.i("check movie", "${objMovie.title}")
@@ -184,22 +201,34 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     }
 
 
-    private fun saveMovieAsFavorite(movieAux:Movie){
+    private fun saveMovieAsFavorite(movie:Movie){
         val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        val sMovie = Gson().toJson(movieAux)
+        val sMovie = Gson().toJson(movie)
 
         if(favoriteBtn.text.equals("Mark as Favorite")){
             //saving data on Shared Preferences
             Log.i("check movieAux", sMovie)
-            editor.putString(movieAux.id.toString(), sMovie)
+            editor.putString(movie.id.toString(), sMovie)
             editor.apply()
             favoriteBtn.text = "<3"
         } else {
-            editor.remove(movieAux.id.toString())
+            editor.remove(movie.id.toString())
             editor.commit()
             favoriteBtn.text = "Mark as Favorite"
             Log.i("removing movieAux",sMovie)
+        }
+    }
+
+    private fun saveMovieAsFavoriteSQLite(movie: Movie){
+        if(favoriteBtn.text == "Mark as Favorite"){
+            favoriteDbHelper.addFavorite(movie)
+            Log.i("pasoAddFavorite","paso!")
+            favoriteBtn.text = "<3"
+        } else {
+            favoriteDbHelper.deleteFavorites(movie.id)
+            favoriteBtn.text = "Mark as Favorite"
+
         }
     }
 }
