@@ -39,6 +39,11 @@ class MovieRecyclerActivity : AppCompatActivity(){
         showMovies()
     }
 
+    override fun onResume() {
+        super.onResume()
+        
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu,menu)
@@ -73,7 +78,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
-                movieList.adapter = movieAdapter
+                setAdapter(movieAdapter)
             }
             override fun onError() {
                 Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
@@ -86,7 +91,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
         moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
-                movieList.adapter = movieAdapter
+                setAdapter(movieAdapter)
             }
 
             override fun onError() {
@@ -100,7 +105,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
         moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
                 movieAdapter = MoviesAdapter(movies,this@MovieRecyclerActivity)
-                movieList.adapter = movieAdapter
+                setAdapter(movieAdapter)
             }
 
             override fun onError() {
@@ -118,9 +123,9 @@ class MovieRecyclerActivity : AppCompatActivity(){
 
         while (item.hasNext()){
             val pair = item.next()
-            //trae el favorite como json a traves de una llave
+            //bring favorite as json through key
             val sMov = sharedPreferences.getString(pair.key, "")
-            //convierte el json en objeto
+            //convert json to object
             val objMovie = Gson().fromJson(sMov, Movie::class.java)
             favoritesM.add(objMovie)
             Log.i("check movie", objMovie.title)
@@ -128,12 +133,16 @@ class MovieRecyclerActivity : AppCompatActivity(){
         Log.i("favoritos", allPreferences.size.toString())
 
         movieAdapter = MoviesAdapter(favoritesM,this)
-        movieList.adapter = movieAdapter
+        setAdapter(movieAdapter)
     }
 
     private fun showFavoritesSQLite(){
         val favoritesM = dbHelper.allFavorites
         movieAdapter = MoviesAdapter(favoritesM,this)
-        movieList.adapter = movieAdapter
+        setAdapter(movieAdapter)
+    }
+
+    fun setAdapter(adapter: MoviesAdapter){
+        movieList.adapter = adapter
     }
 }

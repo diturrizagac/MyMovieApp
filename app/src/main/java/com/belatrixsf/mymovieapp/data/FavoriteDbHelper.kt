@@ -57,15 +57,10 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
         dbHandler.close()
     }
 
-    fun isFavorite(id:Int): Boolean{
-
-        return false
-    }
-
     fun addFavorite(movie: Movie){
-        Log.i("dbbbbb", "before DB")
+        Log.i("dbbbbb", "before write DB")
         val db = writableDatabase
-        Log.i("dbbbbb", "after DB")
+        Log.i("dbbbbb", "after write DB")
         val values = ContentValues()
         values.put(COLUMN_ID,movie.id)
         values.put(COLUMN_TITLE,movie.title)
@@ -81,6 +76,30 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
     fun deleteFavorites(id: Int){
         val db = writableDatabase
         db.delete(TABLE_NAME, "$COLUMN_ID = $id", null)
+        db.close()
+    }
+
+    fun isExistFavorite(id:Int):Boolean{
+        val db = readableDatabase
+
+        val selection = "$COLUMN_ID = ? "
+        val selectionArgument = arrayOf(id.toString())
+        val cursor = db.query(
+            TABLE_NAME,
+            null, // es un array
+            selection,
+            selectionArgument,
+            null,
+            null,
+            null
+        )
+        if(cursor.moveToFirst()){
+            Log.v("entro?"," SI ENTRO")
+            return true
+        }
+        cursor.close()
+        db.close()
+        return false
     }
 
     val allFavorites: List<Movie>
@@ -97,10 +116,15 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
             val sortOrder = "$_ID ASC"
             val favoriteList = ArrayList<Movie>()
             val db = readableDatabase
-            val cursor = db.query(TABLE_NAME,
+            val cursor = db.query(
+                TABLE_NAME,
                 columns,
-                null, null, null, null,
-                sortOrder)
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+            )
             if(cursor.moveToFirst()){
                 do{
                     val id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_ID)))

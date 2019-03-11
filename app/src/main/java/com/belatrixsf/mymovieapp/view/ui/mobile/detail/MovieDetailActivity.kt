@@ -120,12 +120,7 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     }
 
     private fun isFavoriteInSQLite():Boolean{
-        val favoritesDb = favoriteDbHelper.allFavorites
-        if(favoritesDb.contains(movie)){
-            Log.i("movie", "IsFavorite")
-            return true
-        }
-        return false
+        return favoriteDbHelper.isExistFavorite(movie.id)
     }
 
 
@@ -140,13 +135,12 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             val sMov = sharedPreferences.getString(pair.key, "")
             //convert json to object
             val objMovie = Gson().fromJson(sMov, Movie::class.java)
-            //favoritesM.add(objMovie)
+
             //Log.i("check movie", "${objMovie.title}")
-            if (objMovie.id== this.movie.id)
+            if (objMovie.id== movie.id)
                 return true
         }
         return false
-        //Log.i("favoritos", allPreferences.size.toString())
     }
 
     override fun onSupportNavigateUp(): Boolean {
