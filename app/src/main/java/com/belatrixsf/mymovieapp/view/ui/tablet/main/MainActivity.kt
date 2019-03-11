@@ -12,9 +12,9 @@ import com.belatrixsf.mymovieapp.view.ui.tablet.detail.MovieDetailFragment
 
 
 class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener {
-    lateinit var fragmentManager: FragmentManager
-    lateinit var movieListFragment: MovieListFragment
-    lateinit var movieDetailFragment: MovieDetailFragment
+    private lateinit var fragmentManager: FragmentManager
+    private lateinit var movieListFragment: MovieListFragment
+    private lateinit var movieDetailFragment: MovieDetailFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +23,10 @@ class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener 
 
         fragmentManager = supportFragmentManager
         movieListFragment = fragmentManager.findFragmentById(R.id.fragment_list) as MovieListFragment
-        if(hola.equals("true")){
+        if(hola == "true"){
             movieDetailFragment = fragmentManager.findFragmentById(R.id.fragment_details) as MovieDetailFragment
         }
     }
-
-
 
     //Bring data from FragmentList
     override fun sendMovie(movie: Movie) {

@@ -37,10 +37,8 @@ class MoviesRepository {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-
                 repository = MoviesRepository(retrofit.create<TmdbApi>(TmdbApi::class.java))
             }
-
             return repository as MoviesRepository
         }
 
@@ -54,9 +52,7 @@ class MoviesRepository {
     }
 
     fun getMovies(callback: OnGetMoviesCallback) {
-        val allMovies = get().getMovies(
-            MY_API_KEY
-        )
+        val allMovies = get().getMovies(MY_API_KEY)
         allMovies.enqueue(
             object : Callback<MoviesResponse> {
 
@@ -82,9 +78,7 @@ class MoviesRepository {
     }
 
     fun getPopularMovies(callback: OnGetMoviesCallback){
-        val popularMovies = get().getPopularMovies(
-            MY_API_KEY
-        )
+        val popularMovies = get().getPopularMovies(MY_API_KEY)
         popularMovies.enqueue(
             object : Callback<MoviesResponse> {
 
@@ -109,12 +103,9 @@ class MoviesRepository {
     }
 
     fun getTopRatedMovies(callback: OnGetMoviesCallback){
-        val popularMovies = get().getTopRatedMovies(
-            MY_API_KEY
-        )
+        val popularMovies = get().getTopRatedMovies(MY_API_KEY)
         popularMovies.enqueue(
             object : Callback<MoviesResponse> {
-
                 override fun onResponse(call: Call<MoviesResponse>, response: Response<MoviesResponse>) {
                     if (response.isSuccessful) {
                         val moviesResponse = response.body()

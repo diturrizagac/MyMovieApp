@@ -54,7 +54,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
-
         initializeUI()
         showVideos()
         showReviews()
@@ -69,9 +68,9 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         voteAverageTv = findViewById(R.id.detail_header_star)
         imageIv = findViewById(R.id.movie_detail_poster)
 
+        appBar = findViewById(R.id.details_appBar)
         toolbar = findViewById(R.id.movie_detail_toolbar)
         collapsingToolbar = findViewById(R.id.detail_collapse_toolbar)
-        appBar = findViewById(R.id.details_appBar)
         favoriteBtn = findViewById(R.id.detail_favorite_button)
 
         videoList = findViewById(R.id.detail_body_recyclerView_trailers)
@@ -113,7 +112,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         favoriteBtn.setOnClickListener {
             //save as favorite using SQL
             saveMovieAsFavoriteSQLite(movie)
-
             //method to save as favorite using SharedPreference
             //saveMovieAsFavorite(movie)
         }
@@ -155,9 +153,10 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
                     videoAdapter = VideoAdapter(videos,this@MovieDetailActivity)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
+                    //videoList.adapter = VideoAdapter(videos,this@MovieDetailActivity)
                 }
                 override fun onError() {
-                    Toast.makeText(this@MovieDetailActivity, "VIDEO Please check your internet connectionVIDEOS.", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@MovieDetailActivity, "VIDEO Please check your internet connection .", Toast.LENGTH_SHORT)
                         .show()
                 }
 
@@ -168,11 +167,10 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         reviewRepository.getReviews(
             object: OnGetReviewCallback{
                 override fun onSuccess(reviews: List<Review>) {
-                    reviewAdapter = ReviewAdapter(reviews,this@MovieDetailActivity)
-                    //listener
-                    reviewList.adapter = reviewAdapter
+                    //reviewAdapter = ReviewAdapter(reviews,this@MovieDetailActivity)
+                    //reviewList.adapter = reviewAdapter
+                    reviewList.adapter = ReviewAdapter(reviews,this@MovieDetailActivity)
                 }
-
                 override fun onError() {
                     Toast.makeText(this@MovieDetailActivity, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)
                         .show()
@@ -194,6 +192,17 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         startActivity(intent)
     }
 
+    private fun saveMovieAsFavoriteSQLite(movie: Movie){
+        if(favoriteBtn.text == "Mark as Favorite"){
+            favoriteDbHelper.addFavorite(movie)
+            favoriteBtn.text = "<3"
+            Log.i("addFavorite","movie saved SQLite")
+        } else {
+            favoriteDbHelper.deleteFavorites(movie.id)
+            favoriteBtn.text = "Mark as Favorite"
+            Log.i("deleteFavorite","movie removed SQLite")
+        }
+    }
 
     private fun saveMovieAsFavorite(movie:Movie){
         val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
@@ -211,18 +220,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             editor.commit()
             favoriteBtn.text = "Mark as Favorite"
             Log.i("removing movieAux",sMovie)
-        }
-    }
-
-    private fun saveMovieAsFavoriteSQLite(movie: Movie){
-        if(favoriteBtn.text == "Mark as Favorite"){
-            favoriteDbHelper.addFavorite(movie)
-            Log.i("pasoAddFavorite","paso!")
-            favoriteBtn.text = "<3"
-        } else {
-            favoriteDbHelper.deleteFavorites(movie.id)
-            favoriteBtn.text = "Mark as Favorite"
-
         }
     }
 }

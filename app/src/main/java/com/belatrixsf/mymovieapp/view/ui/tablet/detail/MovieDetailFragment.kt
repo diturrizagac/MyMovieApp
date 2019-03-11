@@ -9,10 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetReviewCallback
@@ -20,6 +17,7 @@ import com.belatrixsf.mymovieapp.OnGetVideoCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.api.Api
 import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
+import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
@@ -36,7 +34,7 @@ import kotlinx.android.synthetic.main.layout_detail_header.*
 
 class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAdapterFragListener {
     private var titleTv: TextView? = null
-    lateinit var collapsingToolbar : CollapsingToolbarLayout
+    private lateinit var collapsingToolbar : CollapsingToolbarLayout
     private var imageIv: ImageView? = null
     private var releaseDateTv: TextView? = null
     private var overviewTv: TextView? = null
@@ -48,21 +46,22 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
     private var videosRepository = VideosRepository.getInstance()
     private var reviewRepository = ReviewsRepository.getInstance()
     lateinit var movie : Movie
+    lateinit var favoriteBtn : Button
+    private var favoriteDbHelper = FavoriteDbHelper(this.context!!)
 
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movie_detail, container, false)
     }
 
+    @SuppressLint("WrongConstant")
     fun displayDetail(movie: Movie){
         titleTv = view!!.findViewById(R.id.detail_header_title)
         overviewTv = view!!.findViewById(R.id.detail_body_overview)
@@ -70,6 +69,7 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
         voteAverageTv = view!!.findViewById(R.id.detail_header_star)
         imageIv = view!!.findViewById(R.id.movie_detail_poster)
         collapsingToolbar = view!!.findViewById(R.id.detail_collapse_toolbar)
+        favoriteBtn = view!!.findViewById(R.id.detail_favorite_button)
 
         videoList = view!!.findViewById(R.id.detail_body_recyclerView_trailers)
         reviewList = view!!.findViewById(R.id.detail_body_recyclerView_reviews)
@@ -89,6 +89,21 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
             .into(imageIv!!)
         showVideos()
         showReviews()
+
+        if(isFavoriteInSQLite()){
+            favoriteBtn.text = "<3"
+        } else {
+            favoriteBtn.text = "Mark as Favorite"
+        }
+
+        favoriteBtn.setOnClickListener {
+            //save as favorite using SQL
+            saveMovieAsFavoriteSQLite(movie)
+        }
+    }
+
+    private fun isFavoriteInSQLite():Boolean{
+        return favoriteDbHelper.isExistFavorite(movie.id)
     }
 
     private fun showVideos(){
@@ -139,5 +154,17 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
 
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("${Api.YOUTUBE_VIDEO_URL}${video.key}"))
         startActivity(intent)
+    }
+
+    private fun saveMovieAsFavoriteSQLite(movie: Movie){
+        if(favoriteBtn.text == "Mark as Favorite"){
+            favoriteDbHelper.addFavorite(movie)
+            favoriteBtn.text = "<3"
+            Log.i("addFavorite","movie saved SQLite")
+        } else {
+            favoriteDbHelper.deleteFavorites(movie.id)
+            favoriteBtn.text = "Mark as Favorite"
+            Log.i("deleteFavorite","movie removed SQLite")
+        }
     }
 }

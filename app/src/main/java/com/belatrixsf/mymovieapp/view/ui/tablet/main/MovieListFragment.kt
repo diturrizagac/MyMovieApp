@@ -14,7 +14,6 @@ import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
-import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
 import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapterFragment
 import com.google.gson.Gson
 
@@ -23,7 +22,7 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     lateinit var movieList: RecyclerView
     lateinit var movieAdapterF: MoviesAdapterFragment
     private var moviesRepository = MoviesRepository.getInstance()
-    var listenerListFragment: OnMovieListListener? = null
+    private var listenerListFragment: OnMovieListListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
