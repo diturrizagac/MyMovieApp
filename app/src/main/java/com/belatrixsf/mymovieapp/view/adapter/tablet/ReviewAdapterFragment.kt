@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.adapter
+package com.belatrixsf.mymovieapp.view.adapter.tablet
 
 import android.content.Context
 import android.util.Log

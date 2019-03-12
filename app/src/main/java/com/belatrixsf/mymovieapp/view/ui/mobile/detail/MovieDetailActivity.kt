@@ -23,8 +23,8 @@ import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
 import com.belatrixsf.mymovieapp.repository.ReviewsRepository
 import com.belatrixsf.mymovieapp.repository.VideosRepository
-import com.belatrixsf.mymovieapp.view.adapter.ReviewAdapter
-import com.belatrixsf.mymovieapp.view.adapter.VideoAdapter
+import com.belatrixsf.mymovieapp.view.adapter.mobile.ReviewAdapter
+import com.belatrixsf.mymovieapp.view.adapter.mobile.VideoAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
@@ -59,7 +59,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         showReviews()
     }
 
-
     @SuppressLint("WrongConstant")
     private fun initializeUI(){
         titleTv = findViewById(R.id.detail_header_title)
@@ -81,14 +80,13 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        //setting Videos
+        //setting format Videos
         videoList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        //setting Reviews
+        //setting format Reviews
         reviewList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
 
         // Recieve data
         val movie = intent.extras!!.getSerializable("movie") as Movie // casteo // oncreatemenu
-        //id = movie.id.toString()
         this.movie = movie
 
         // Setting values
@@ -150,7 +148,8 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         videosRepository.getVideos(
             object: OnGetVideoCallback {
                 override fun onSuccess(videos: List<Video>) {
-                    videoAdapter = VideoAdapter(videos,this@MovieDetailActivity)
+                    videoAdapter =
+                        VideoAdapter(videos, this@MovieDetailActivity)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
                     //videoList.adapter = VideoAdapter(videos,this@MovieDetailActivity)
@@ -169,7 +168,8 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
                 override fun onSuccess(reviews: List<Review>) {
                     //reviewAdapter = ReviewAdapter(reviews,this@MovieDetailActivity)
                     //reviewList.adapter = reviewAdapter
-                    reviewList.adapter = ReviewAdapter(reviews,this@MovieDetailActivity)
+                    reviewList.adapter =
+                        ReviewAdapter(reviews, this@MovieDetailActivity)
                 }
                 override fun onError() {
                     Toast.makeText(this@MovieDetailActivity, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)

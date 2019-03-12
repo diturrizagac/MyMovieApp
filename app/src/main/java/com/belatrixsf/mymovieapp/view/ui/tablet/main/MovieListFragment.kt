@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
+import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
-import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapterFragment
+import com.belatrixsf.mymovieapp.view.adapter.mobile.MoviesAdapter
+import com.belatrixsf.mymovieapp.view.adapter.tablet.MoviesAdapterFragment
+import com.belatrixsf.mymovieapp.view.ui.tablet.detail.MovieDetailFragment
 import com.google.gson.Gson
 
 
@@ -22,12 +25,15 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     lateinit var movieList: RecyclerView
     lateinit var movieAdapterF: MoviesAdapterFragment
     private var moviesRepository = MoviesRepository.getInstance()
+    private lateinit var dbHelper :FavoriteDbHelper
     private var listenerListFragment: OnMovieListListener? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        dbHelper = FavoriteDbHelper(this.context!!)
         val rootView = inflater.inflate(R.layout.fragment_movie_list, container, false)
         // Inflate the layout for this fragment
         setupRecycler(rootView)
@@ -38,16 +44,16 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
         movieList = rootView.findViewById(R.id.movie_fragment_recycler)
         movieList.layoutManager = GridLayoutManager(activity, 3) as RecyclerView.LayoutManager?
         showMovies()
-
     }
 
     fun showMovies(){
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
-                movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
+                setAdapter(MoviesAdapterFragment(movies, view!!.context))
+                //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
                 //connect Fragment - Adapter
-                setListener()
-                movieList.adapter = movieAdapterF
+                //movieList.adapter = movieAdapterF
+                listenerListFragment!!.sendMovie(movies[0])
             }
 
             override fun onError() {
@@ -60,9 +66,10 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     fun showPopularMovies(){
         moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
-                movieAdapterF = MoviesAdapterFragment(movies,view!!.context)
-                setListener()
-                movieList.adapter = movieAdapterF
+                setAdapter(MoviesAdapterFragment(movies, view!!.context))
+                //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
+                //movieList.adapter = movieAdapterF
+                listenerListFragment!!.sendMovie(movies[0])
             }
 
             override fun onError() {
@@ -75,9 +82,10 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     fun showTopRatedMovies(){
         moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
-                movieAdapterF = MoviesAdapterFragment(movies,view!!.context)
-                setListener()
-                movieList.adapter = movieAdapterF
+                setAdapter(MoviesAdapterFragment(movies, view!!.context))
+                //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
+                //movieList.adapter = movieAdapterF
+                listenerListFragment!!.sendMovie(movies[0])
             }
 
             override fun onError() {
@@ -85,6 +93,14 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
                     .show()
             }
         })
+    }
+
+    fun showFavoritesSQLite(){
+        val favoritesM = dbHelper.allFavorites
+        setAdapter(MoviesAdapterFragment(favoritesM, view!!.context))
+        //movieAdapter = MoviesAdapter(favoritesM,this)
+        //setAdapter(movieAdapter)
+        //listenerListFragment!!.sendMovie(favoritesM[0])
     }
 
     fun showFavorites(){
@@ -95,17 +111,18 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
 
         while (item.hasNext()){
             val pair = item.next()
-            //trae el favorite como json a traves de una llave
+            //bring favorite as json through a key
             val sMov = sharedPreferences.getString(pair.key, "")
-            //convierte el json en object
+            //convert json to object using gson library
             val objMovie = Gson().fromJson(sMov, Movie::class.java)
             favoritesM.add(objMovie)
             Log.i("check movie", objMovie.title)
         }
         Log.i("favoritos", allPreferences.size.toString())
 
-        movieAdapterF = MoviesAdapterFragment(favoritesM,view!!.context)
-        movieList.adapter = movieAdapterF
+        setAdapter(MoviesAdapterFragment(favoritesM, view!!.context))
+        //movieAdapterF = MoviesAdapterFragment(favoritesM, view!!.context)
+        //movieList.adapter = movieAdapterF
     }
 
     //CALLBACK TO BRING DATA FROM ADAPTER
@@ -117,9 +134,13 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
         }
     }
 
-    fun setListener() {
-        movieAdapterF.listenerAdapter = this
+    private fun setListener(adapter: MoviesAdapterFragment) {
+        adapter.listenerAdapter = this
+    }
 
+    fun setAdapter(adapter:MoviesAdapterFragment){
+        movieList.adapter = adapter
+        setListener(adapter)
     }
 
     override fun onAttach(context: Context) { //connect with activity

@@ -11,5 +11,6 @@ class FavoriteContract {
         const val COLUMN_RATING = "rating"
         const val COLUMN_POSTER_PATH = "poster"
         const val COLUMN_OVERVIEW = "overview"
+        const val COLUMN_BACKDROP_PATH = "backdrop"
     }
 }

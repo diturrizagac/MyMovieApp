@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.adapter
+package com.belatrixsf.mymovieapp.view.adapter.mobile
 
 import android.content.Context
 import android.content.Intent

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.MainThread
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetReviewCallback
@@ -23,16 +24,14 @@ import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
 import com.belatrixsf.mymovieapp.repository.ReviewsRepository
 import com.belatrixsf.mymovieapp.repository.VideosRepository
-import com.belatrixsf.mymovieapp.view.adapter.ReviewAdapterFragment
-import com.belatrixsf.mymovieapp.view.adapter.VideoAdapterFragment
+import com.belatrixsf.mymovieapp.view.adapter.tablet.ReviewAdapterFragment
+import com.belatrixsf.mymovieapp.view.adapter.tablet.VideoAdapterFragment
+import com.belatrixsf.mymovieapp.view.ui.tablet.main.MovieListFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import kotlinx.android.synthetic.main.fragment_movie_detail.*
-import kotlinx.android.synthetic.main.layout_detail_body.*
-import kotlinx.android.synthetic.main.layout_detail_header.*
 
-class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAdapterFragListener {
+class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAdapterFragListener, MovieListFragment.OnMovieListListener {
     private var titleTv: TextView? = null
     private lateinit var collapsingToolbar : CollapsingToolbarLayout
     private var imageIv: ImageView? = null
@@ -47,7 +46,7 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
     private var reviewRepository = ReviewsRepository.getInstance()
     lateinit var movie : Movie
     lateinit var favoriteBtn : Button
-    private var favoriteDbHelper = FavoriteDbHelper(this.context!!)
+    private lateinit var favoriteDbHelper : FavoriteDbHelper
 
     @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +56,7 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        favoriteDbHelper = FavoriteDbHelper(this.context!!)
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movie_detail, container, false)
     }
@@ -110,7 +110,7 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
         videosRepository.getVideos(
             object: OnGetVideoCallback {
                 override fun onSuccess(videos: List<Video>) {
-                    videoAdapter = VideoAdapterFragment(videos,view!!.context)
+                    videoAdapter = VideoAdapterFragment(videos, view!!.context)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
                 }
@@ -118,7 +118,6 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
                     Toast.makeText(view!!.context, "VIDEO Please check your internet connectionVIDEOS.", Toast.LENGTH_SHORT)
                         .show()
                 }
-
             }, movie.id
         )
     }
@@ -126,7 +125,7 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
         reviewRepository.getReviews(
             object: OnGetReviewCallback {
                 override fun onSuccess(reviews: List<Review>) {
-                    reviewAdapter = ReviewAdapterFragment(reviews,view!!.context)
+                    reviewAdapter = ReviewAdapterFragment(reviews, view!!.context)
                     //listener
                     reviewList.adapter = reviewAdapter
                 }
@@ -135,7 +134,6 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
                     Toast.makeText(view!!.context, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)
                         .show()
                 }
-
             },movie.id
         )
     }
@@ -146,7 +144,6 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
 
     private fun setListenerVideo() {
         videoAdapter!!.listenerAdapterF = this
-
     }
 
     override fun goToYoutubeIntent(video: Video) {
@@ -167,4 +164,10 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
             Log.i("deleteFavorite","movie removed SQLite")
         }
     }
+
+    override fun sendMovie(movie: Movie) {
+        displayDetail(movie)
+    }
+
+
 }

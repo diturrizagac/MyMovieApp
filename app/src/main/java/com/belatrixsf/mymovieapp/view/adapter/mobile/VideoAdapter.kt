@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.adapter
+package com.belatrixsf.mymovieapp.view.adapter.mobile
 
 import android.content.Context
 import android.util.Log
@@ -17,7 +17,7 @@ class VideoAdapter(private val videos: List<Video>, private val mContext: Contex
 
     var listenerAdapter: OnClickItemVideoAdapterListener? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoAdapter.VideoViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video, parent, false)
         return VideoViewHolder(view)
     }
@@ -26,7 +26,7 @@ class VideoAdapter(private val videos: List<Video>, private val mContext: Contex
         return videos.size
     }
 
-    override fun onBindViewHolder(holder: VideoAdapter.VideoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
         val video = videos[position]
         holder.bindVideo(video)
     }

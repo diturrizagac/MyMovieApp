@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.adapter
+package com.belatrixsf.mymovieapp.view.adapter.tablet
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -15,7 +15,7 @@ import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 class MoviesAdapterFragment(private val movies: List<Movie>, private val mContext: Context) :
     RecyclerView.Adapter<MoviesAdapterFragment.MovieViewHolder>() {
 
-    var listenerAdapter: OnItemClickListener ?= null
+    var listenerAdapter: OnItemClickListener?= null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_card_view, parent, false)
@@ -26,13 +26,13 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
         return movies.size
     }
 
-    override fun onBindViewHolder(holder: MoviesAdapterFragment.MovieViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = movies[position]
         holder.bind(movie)
     }
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var image: ImageView = itemView.findViewById(R.id.movie_img_id)
+        private var image: ImageView = itemView.findViewById(R.id.movie_img_id)
 
         val myView = itemView.setOnClickListener {
             val position = adapterPosition
@@ -55,4 +55,5 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
     interface OnItemClickListener {
         fun getItemMovie(movie: Movie)
     }
+
 }

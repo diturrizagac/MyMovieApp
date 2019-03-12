@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var hola =getString(R.string.islandscape)
+        val hola =getString(R.string.islandscape)
 
         fragmentManager = supportFragmentManager
         movieListFragment = fragmentManager.findFragmentById(R.id.fragment_list) as MovieListFragment
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), MovieListFragment.OnMovieListListener 
                 true
             }
             R.id.option_favorites -> {
-                movieListFragment.showFavorites()
+                movieListFragment.showFavoritesSQLite()
                 true
             }
             else -> super.onOptionsItemSelected(item)

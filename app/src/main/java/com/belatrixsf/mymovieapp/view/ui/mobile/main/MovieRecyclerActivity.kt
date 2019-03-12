@@ -3,26 +3,18 @@ package com.belatrixsf.mymovieapp.view.ui.mobile.main
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.BaseColumns
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
-import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_ID
-import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW
-import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_POSTER_PATH
-import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_RATING
-import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_RELEASE
-import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_TITLE
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
-import com.belatrixsf.mymovieapp.view.adapter.MoviesAdapter
+import com.belatrixsf.mymovieapp.view.adapter.mobile.MoviesAdapter
 import com.google.gson.Gson
 
 class MovieRecyclerActivity : AppCompatActivity(){
@@ -39,6 +31,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
         showMovies()
     }
 
+    //flag to refresh favorite list :D
     override fun onResume() {
         super.onResume()
         if (flag){
@@ -81,7 +74,12 @@ class MovieRecyclerActivity : AppCompatActivity(){
     private fun showMovies(){
         moviesRepository.getMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
-                setAdapter(MoviesAdapter(movies,this@MovieRecyclerActivity))
+                setAdapter(
+                    MoviesAdapter(
+                        movies,
+                        this@MovieRecyclerActivity
+                    )
+                )
             }
             override fun onError() {
                 Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
@@ -93,7 +91,12 @@ class MovieRecyclerActivity : AppCompatActivity(){
     private fun showPopularMovies(){
         moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
-                setAdapter(MoviesAdapter(movies,this@MovieRecyclerActivity))
+                setAdapter(
+                    MoviesAdapter(
+                        movies,
+                        this@MovieRecyclerActivity
+                    )
+                )
             }
             override fun onError() {
                 Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
@@ -105,7 +108,12 @@ class MovieRecyclerActivity : AppCompatActivity(){
     private fun showTopRatedMovies(){
         moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
             override fun onSuccess(movies: List<Movie>) {
-                setAdapter(MoviesAdapter(movies,this@MovieRecyclerActivity))
+                setAdapter(
+                    MoviesAdapter(
+                        movies,
+                        this@MovieRecyclerActivity
+                    )
+                )
             }
             override fun onError() {
                 Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
@@ -133,12 +141,12 @@ class MovieRecyclerActivity : AppCompatActivity(){
 
         //movieAdapter = MoviesAdapter(favoritesM,this)
         //setAdapter(movieAdapter)
-        setAdapter(MoviesAdapter(favoritesM,this))
+        setAdapter(MoviesAdapter(favoritesM, this))
     }
 
     private fun showFavoritesSQLite(){
         val favoritesM = dbHelper.allFavorites
-        setAdapter(MoviesAdapter(favoritesM,this))
+        setAdapter(MoviesAdapter(favoritesM, this))
         //movieAdapter = MoviesAdapter(favoritesM,this)
         //setAdapter(movieAdapter)
 

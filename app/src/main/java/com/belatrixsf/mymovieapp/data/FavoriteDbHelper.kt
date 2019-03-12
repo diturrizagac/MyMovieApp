@@ -7,6 +7,7 @@ import android.provider.BaseColumns
 import android.provider.BaseColumns._ID
 import android.util.Log
 import com.belatrixsf.mymovieapp.data.FavoriteContract.*
+import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_BACKDROP_PATH
 import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_ID
 import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW
 import com.belatrixsf.mymovieapp.data.FavoriteContract.FavoriteEntry.COLUMN_POSTER_PATH
@@ -31,7 +32,8 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
                     "$COLUMN_RELEASE TEXT, " +
                     "$COLUMN_RATING REAL, " +
                     "$COLUMN_POSTER_PATH TEXT, " +
-                    "$COLUMN_OVERVIEW TEXT" +
+                    "$COLUMN_OVERVIEW TEXT," +
+                    "$COLUMN_BACKDROP_PATH TEXT" +
                     ");"
 
         const val SQL_DELETE_FAVORITE_TABLE = "DROP TABLE IF EXISTS ${FavoriteEntry.TABLE_NAME}"
@@ -68,7 +70,7 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
         values.put(COLUMN_RATING,movie.vote_average)
         values.put(COLUMN_POSTER_PATH,movie.poster_path)
         values.put(COLUMN_OVERVIEW,movie.overview)
-
+        values.put(COLUMN_BACKDROP_PATH,movie.backdrop_path)
         db.insert(TABLE_NAME,null,values)
         db.close()
     }
@@ -111,7 +113,8 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
                 COLUMN_RELEASE,
                 COLUMN_RATING,
                 COLUMN_POSTER_PATH,
-                COLUMN_OVERVIEW
+                COLUMN_OVERVIEW,
+                COLUMN_BACKDROP_PATH
             )
             val sortOrder = "$_ID ASC"
             val favoriteList = ArrayList<Movie>()
@@ -134,6 +137,7 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
                     val poster = cursor.getString(cursor.getColumnIndex(COLUMN_POSTER_PATH))
                     val overview = cursor.getString(cursor.getColumnIndex(COLUMN_OVERVIEW))
                     val listAux = ArrayList<Int>() as List<Int>
+                    val backdrop = cursor.getString(cursor.getColumnIndex(COLUMN_BACKDROP_PATH))
 
                     val movie = Movie(0,0, 0F,"",
                         0.0,"","","",
@@ -144,6 +148,7 @@ class FavoriteDbHelper(context:Context): SQLiteOpenHelper(context,DATABASE_NAME,
                     movie.vote_average = voteAverage
                     movie.poster_path = poster
                     movie.overview = overview
+                    movie.backdrop_path = backdrop
                     favoriteList.add(movie)
                 }while (cursor.moveToNext())
             }

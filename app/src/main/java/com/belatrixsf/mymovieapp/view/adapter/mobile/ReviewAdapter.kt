@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.adapter
+package com.belatrixsf.mymovieapp.view.adapter.mobile
 
 import android.content.Context
 import android.util.Log
@@ -13,7 +13,7 @@ import com.ms.square.android.expandabletextview.ExpandableTextView
 
 class ReviewAdapter(private val reviews: List<Review>, mContext: Context): RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewAdapter.ReviewViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
         val view =  LayoutInflater.from(parent.context).inflate(R.layout.item_review,parent,false)
         return ReviewViewHolder(view)
     }
@@ -22,7 +22,7 @@ class ReviewAdapter(private val reviews: List<Review>, mContext: Context): Recyc
         return reviews.size
     }
 
-    override fun onBindViewHolder(holder: ReviewAdapter.ReviewViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviews[position]
         holder.bindReview(review)
     }

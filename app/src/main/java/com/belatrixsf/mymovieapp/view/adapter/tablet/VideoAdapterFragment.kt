@@ -1,4 +1,4 @@
-package com.belatrixsf.mymovieapp.view.adapter
+package com.belatrixsf.mymovieapp.view.adapter.tablet
 
 import android.content.Context
 import android.util.Log
@@ -16,7 +16,7 @@ import com.bumptech.glide.request.RequestOptions
 class VideoAdapterFragment(private val videos: List<Video>, private val mContext: Context) :
     RecyclerView.Adapter<VideoAdapterFragment.VideoViewHolder>(){
 
-    var listenerAdapterF: VideoAdapterFragment.OnClickItemVideoAdapterFragListener? = null
+    var listenerAdapterF: OnClickItemVideoAdapterFragListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_video, parent, false)
