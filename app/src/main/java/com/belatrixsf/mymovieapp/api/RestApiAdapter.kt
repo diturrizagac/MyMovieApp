@@ -9,7 +9,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 
-interface TmdbApi {
+interface RestApiAdapter {
     @GET("discover/movie?sort_by=popularity.asc")// discover/movie
     fun getMovies(
         @Query("api_key") apiKey: String

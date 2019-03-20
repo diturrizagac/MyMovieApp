@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.belatrixsf.mymovieapp.OnGetItemCallback
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
@@ -27,7 +28,20 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     private var moviesRepository = MoviesRepository.getInstance()
     private lateinit var dbHelper :FavoriteDbHelper
     private var listenerListFragment: OnMovieListListener? = null
+    private val callback = object : OnGetItemCallback<Movie>{
+        override fun onSuccess(movies: List<Movie>) {
+            setAdapter(MoviesAdapterFragment(movies, view!!.context))
+            //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
+            //connect Fragment - Adapter
+            //movieList.adapter = movieAdapterF
+            listenerListFragment!!.sendMovie(movies[0])
+        }
 
+        override fun onError() {
+            Toast.makeText(view!!.context, "Please check your internet connection.", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,53 +60,17 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
         showMovies()
     }
 
-    fun showMovies(){
-        moviesRepository.getMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<Movie>) {
-                setAdapter(MoviesAdapterFragment(movies, view!!.context))
-                //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
-                //connect Fragment - Adapter
-                //movieList.adapter = movieAdapterF
-                listenerListFragment!!.sendMovie(movies[0])
-            }
 
-            override fun onError() {
-                Toast.makeText(view!!.context, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        })
+    fun showMovies(){
+        moviesRepository.getMovies(callback)
     }
 
     fun showPopularMovies(){
-        moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<Movie>) {
-                setAdapter(MoviesAdapterFragment(movies, view!!.context))
-                //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
-                //movieList.adapter = movieAdapterF
-                listenerListFragment!!.sendMovie(movies[0])
-            }
-
-            override fun onError() {
-                Toast.makeText(view!!.context, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        })
+        moviesRepository.getPopularMovies(callback)
     }
 
     fun showTopRatedMovies(){
-        moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<Movie>) {
-                setAdapter(MoviesAdapterFragment(movies, view!!.context))
-                //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
-                //movieList.adapter = movieAdapterF
-                listenerListFragment!!.sendMovie(movies[0])
-            }
-
-            override fun onError() {
-                Toast.makeText(view!!.context, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        })
+        moviesRepository.getTopRatedMovies(callback)
     }
 
     fun showFavoritesSQLite(){

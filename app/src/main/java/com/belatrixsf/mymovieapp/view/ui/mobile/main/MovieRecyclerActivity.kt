@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.belatrixsf.mymovieapp.OnGetItemCallback
 import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
@@ -28,7 +29,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
         setContentView(R.layout.activity_movie_recycler)
         movieList = findViewById(R.id.movie_recycler_view)
         movieList.layoutManager = GridLayoutManager(this, 3)
-        showMovies()
+        showMoviesT()
     }
 
     //flag to refresh favorite list :D
@@ -40,84 +41,42 @@ class MovieRecyclerActivity : AppCompatActivity(){
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater= menuInflater
-        inflater.inflate(R.menu.menu,menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item!!.itemId){
-            R.id.option_main -> {
-                showMovies()
-                true
-            }
-            R.id.option_popular_movies -> {
-                showPopularMovies()
-                true
-            }
-            R.id.option_rated_movies -> {
-                showTopRatedMovies()
-                true
-            }
-            R.id.option_favorites -> {
-                //showFavorites()
-                flag = true
-                showFavoritesSQLite()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-
-    private fun showMovies(){
-        moviesRepository.getMovies(object : OnGetMoviesCallback {
-            override fun onSuccess(movies: List<Movie>) {
+    private fun showMoviesT() {
+        moviesRepository.getMovies(object : OnGetItemCallback<Movie> {
+            override fun onSuccess(items: List<Movie>) {
                 setAdapter(
-                    MoviesAdapter(
-                        movies,
-                        this@MovieRecyclerActivity
-                    )
+                    MoviesAdapter(items, this@MovieRecyclerActivity)
                 )
             }
+
             override fun onError() {
-                Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                    .show()
+                showErrorMessage()
             }
         })
     }
 
     private fun showPopularMovies(){
-        moviesRepository.getPopularMovies(object : OnGetMoviesCallback {
+        moviesRepository.getPopularMovies(object : OnGetItemCallback<Movie> {
             override fun onSuccess(movies: List<Movie>) {
                 setAdapter(
-                    MoviesAdapter(
-                        movies,
-                        this@MovieRecyclerActivity
-                    )
+                    MoviesAdapter(movies, this@MovieRecyclerActivity)
                 )
             }
             override fun onError() {
-                Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                    .show()
+                showErrorMessage()
             }
         })
     }
 
     private fun showTopRatedMovies(){
-        moviesRepository.getTopRatedMovies(object : OnGetMoviesCallback {
+        moviesRepository.getTopRatedMovies(object : OnGetItemCallback<Movie> {
             override fun onSuccess(movies: List<Movie>) {
                 setAdapter(
-                    MoviesAdapter(
-                        movies,
-                        this@MovieRecyclerActivity
-                    )
+                    MoviesAdapter(movies, this@MovieRecyclerActivity)
                 )
             }
             override fun onError() {
-                Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                    .show()
+                showErrorMessage()
             }
         })
     }
@@ -138,21 +97,50 @@ class MovieRecyclerActivity : AppCompatActivity(){
             Log.i("check movie", objMovie.title)
         }
         Log.i("favoritos", allPreferences.size.toString())
-
-        //movieAdapter = MoviesAdapter(favoritesM,this)
-        //setAdapter(movieAdapter)
         setAdapter(MoviesAdapter(favoritesM, this))
     }
 
     private fun showFavoritesSQLite(){
         val favoritesM = dbHelper.allFavorites
         setAdapter(MoviesAdapter(favoritesM, this))
-        //movieAdapter = MoviesAdapter(favoritesM,this)
-        //setAdapter(movieAdapter)
-
     }
 
     fun setAdapter(adapter: MoviesAdapter){
         movieList.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater= menuInflater
+        inflater.inflate(R.menu.menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item!!.itemId){
+            R.id.option_main -> {
+                showMoviesT()
+                true
+            }
+            R.id.option_popular_movies -> {
+                showPopularMovies()
+                true
+            }
+            R.id.option_rated_movies -> {
+                showTopRatedMovies()
+                true
+            }
+            R.id.option_favorites -> {
+                //showFavorites()
+                flag = true
+                showFavoritesSQLite()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun showErrorMessage(){
+        Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
+            .show()
     }
 }
