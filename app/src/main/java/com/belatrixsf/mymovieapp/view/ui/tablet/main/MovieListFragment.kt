@@ -23,17 +23,14 @@ import com.google.gson.Gson
 
 
 class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener {
-    lateinit var movieList: RecyclerView
-    lateinit var movieAdapterF: MoviesAdapterFragment
-    private var moviesRepository = MoviesRepository.getInstance()
+    private lateinit var movieList: RecyclerView
     private lateinit var dbHelper :FavoriteDbHelper
+    private var moviesRepository = MoviesRepository.getInstance()
     private var listenerListFragment: OnMovieListListener? = null
     private val callback = object : OnGetItemCallback<Movie>{
         override fun onSuccess(movies: List<Movie>) {
-            setAdapter(MoviesAdapterFragment(movies, view!!.context))
-            //movieAdapterF = MoviesAdapterFragment(movies, view!!.context)
             //connect Fragment - Adapter
-            //movieList.adapter = movieAdapterF
+            setAdapter(MoviesAdapterFragment(movies, view!!.context))
             listenerListFragment!!.sendMovie(movies[0])
         }
 
@@ -76,31 +73,6 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     fun showFavoritesSQLite(){
         val favoritesM = dbHelper.allFavorites
         setAdapter(MoviesAdapterFragment(favoritesM, view!!.context))
-        //movieAdapter = MoviesAdapter(favoritesM,this)
-        //setAdapter(movieAdapter)
-        //listenerListFragment!!.sendMovie(favoritesM[0])
-    }
-
-    fun showFavorites(){
-        val favoritesM = ArrayList<Movie>()
-        val sharedPreferences = context!!.getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
-        val allPreferences = sharedPreferences.all
-        val item =  allPreferences.entries.iterator()
-
-        while (item.hasNext()){
-            val pair = item.next()
-            //bring favorite as json through a key
-            val sMov = sharedPreferences.getString(pair.key, "")
-            //convert json to object using gson library
-            val objMovie = Gson().fromJson(sMov, Movie::class.java)
-            favoritesM.add(objMovie)
-            Log.i("check movie", objMovie.title)
-        }
-        Log.i("favoritos", allPreferences.size.toString())
-
-        setAdapter(MoviesAdapterFragment(favoritesM, view!!.context))
-        //movieAdapterF = MoviesAdapterFragment(favoritesM, view!!.context)
-        //movieList.adapter = movieAdapterF
     }
 
     //CALLBACK TO BRING DATA FROM ADAPTER
@@ -137,5 +109,24 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
 
     interface OnMovieListListener{
         fun sendMovie(movie: Movie)
+    }
+
+    fun showFavorites(){
+        val favoritesM = ArrayList<Movie>()
+        val sharedPreferences = context!!.getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
+        val allPreferences = sharedPreferences.all
+        val item =  allPreferences.entries.iterator()
+
+        while (item.hasNext()){
+            val pair = item.next()
+            //bring favorite as json through a key
+            val sMov = sharedPreferences.getString(pair.key, "")
+            //convert json to object using gson library
+            val objMovie = Gson().fromJson(sMov, Movie::class.java)
+            favoritesM.add(objMovie)
+            Log.i("check movie", objMovie.title)
+        }
+        Log.i("favoritos", allPreferences.size.toString())
+        setAdapter(MoviesAdapterFragment(favoritesM, view!!.context))
     }
 }

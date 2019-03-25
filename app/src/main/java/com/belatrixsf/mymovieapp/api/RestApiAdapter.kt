@@ -36,5 +36,4 @@ interface RestApiAdapter {
         @Path("movie_id") movieId:Int,
         @Query("api_key") apiKey: String
     ): Call<ReviewResponse>
-
 }

@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.belatrixsf.mymovieapp.OnGetItemCallback
 import com.belatrixsf.mymovieapp.OnGetReviewCallback
 import com.belatrixsf.mymovieapp.OnGetVideoCallback
 import com.belatrixsf.mymovieapp.R
@@ -108,9 +109,9 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
 
     private fun showVideos(){
         videosRepository.getVideos(
-            object: OnGetVideoCallback {
-                override fun onSuccess(videos: List<Video>) {
-                    videoAdapter = VideoAdapterFragment(videos, view!!.context)
+            object: OnGetItemCallback<Video> {
+                override fun onSuccess(items: List<Video>) {
+                    videoAdapter = VideoAdapterFragment(items, view!!.context)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
                 }
@@ -123,9 +124,9 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
     }
     private fun showReviews(){
         reviewRepository.getReviews(
-            object: OnGetReviewCallback {
-                override fun onSuccess(reviews: List<Review>) {
-                    reviewAdapter = ReviewAdapterFragment(reviews, view!!.context)
+            object: OnGetItemCallback<Review> {
+                override fun onSuccess(items: List<Review>) {
+                    reviewAdapter = ReviewAdapterFragment(items, view!!.context)
                     //listener
                     reviewList.adapter = reviewAdapter
                 }

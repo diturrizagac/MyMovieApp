@@ -48,12 +48,8 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
         fun bind(movie: Movie) {
             Glide.with(itemView)
                 .load("$IMAGE_BASE_URL${movie.poster_path}")
-                .apply(RequestOptions.placeholderOf(R.color.background900))
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground))
                 .into(image)
         }
-
-
     }
-
-
 }

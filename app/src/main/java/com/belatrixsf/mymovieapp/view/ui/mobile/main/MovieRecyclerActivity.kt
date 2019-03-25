@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.belatrixsf.mymovieapp.OnGetItemCallback
-import com.belatrixsf.mymovieapp.OnGetMoviesCallback
 import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
@@ -18,7 +17,7 @@ import com.belatrixsf.mymovieapp.repository.MoviesRepository
 import com.belatrixsf.mymovieapp.view.adapter.mobile.MoviesAdapter
 import com.google.gson.Gson
 
-class MovieRecyclerActivity : AppCompatActivity(){
+class MovieRecyclerActivity : AppCompatActivity() {
     private lateinit var movieList: RecyclerView
     private var moviesRepository = MoviesRepository.getInstance()
     private var dbHelper = FavoriteDbHelper(this)
@@ -30,6 +29,17 @@ class MovieRecyclerActivity : AppCompatActivity(){
         movieList = findViewById(R.id.movie_recycler_view)
         movieList.layoutManager = GridLayoutManager(this, 3)
         showMoviesT()
+
+
+        movieList.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
 
     //flag to refresh favorite list :D
@@ -40,6 +50,7 @@ class MovieRecyclerActivity : AppCompatActivity(){
             flag = false
         }
     }
+
 
     private fun showMoviesT() {
         moviesRepository.getMovies(object : OnGetItemCallback<Movie> {
@@ -57,9 +68,9 @@ class MovieRecyclerActivity : AppCompatActivity(){
 
     private fun showPopularMovies(){
         moviesRepository.getPopularMovies(object : OnGetItemCallback<Movie> {
-            override fun onSuccess(movies: List<Movie>) {
+            override fun onSuccess(items: List<Movie>) {
                 setAdapter(
-                    MoviesAdapter(movies, this@MovieRecyclerActivity)
+                    MoviesAdapter(items, this@MovieRecyclerActivity)
                 )
             }
             override fun onError() {
@@ -70,9 +81,9 @@ class MovieRecyclerActivity : AppCompatActivity(){
 
     private fun showTopRatedMovies(){
         moviesRepository.getTopRatedMovies(object : OnGetItemCallback<Movie> {
-            override fun onSuccess(movies: List<Movie>) {
+            override fun onSuccess(items: List<Movie>) {
                 setAdapter(
-                    MoviesAdapter(movies, this@MovieRecyclerActivity)
+                    MoviesAdapter(items, this@MovieRecyclerActivity)
                 )
             }
             override fun onError() {
@@ -119,14 +130,17 @@ class MovieRecyclerActivity : AppCompatActivity(){
         return when(item!!.itemId){
             R.id.option_main -> {
                 showMoviesT()
+                flag = false
                 true
             }
             R.id.option_popular_movies -> {
                 showPopularMovies()
+                flag = false
                 true
             }
             R.id.option_rated_movies -> {
                 showTopRatedMovies()
+                flag = false
                 true
             }
             R.id.option_favorites -> {

@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.belatrixsf.mymovieapp.OnGetItemCallback
 import com.belatrixsf.mymovieapp.OnGetReviewCallback
 import com.belatrixsf.mymovieapp.OnGetVideoCallback
 import com.belatrixsf.mymovieapp.R
@@ -146,10 +147,10 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
 
     private fun showVideos(){
         videosRepository.getVideos(
-            object: OnGetVideoCallback {
-                override fun onSuccess(videos: List<Video>) {
+            object: OnGetItemCallback<Video> {
+                override fun onSuccess(items: List<Video>) {
                     videoAdapter =
-                        VideoAdapter(videos, this@MovieDetailActivity)
+                        VideoAdapter(items, this@MovieDetailActivity)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
                     //videoList.adapter = VideoAdapter(videos,this@MovieDetailActivity)
@@ -164,12 +165,12 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     }
     private fun showReviews(){
         reviewRepository.getReviews(
-            object: OnGetReviewCallback{
-                override fun onSuccess(reviews: List<Review>) {
+            object: OnGetItemCallback<Review>{
+                override fun onSuccess(items: List<Review>) {
                     //reviewAdapter = ReviewAdapter(reviews,this@MovieDetailActivity)
                     //reviewList.adapter = reviewAdapter
                     reviewList.adapter =
-                        ReviewAdapter(reviews, this@MovieDetailActivity)
+                        ReviewAdapter(items, this@MovieDetailActivity)
                 }
                 override fun onError() {
                     Toast.makeText(this@MovieDetailActivity, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)
