@@ -4,7 +4,7 @@
           android:title="Home" >
     </item>
     <item android:id="@+id/option_popular_movies"
-          android:title="Porpular Movies" >
+          android:title="Popular Movies" >
     </item>
     <item android:id="@+id/option_rated_movies"
           android:title="Rated Movies" >

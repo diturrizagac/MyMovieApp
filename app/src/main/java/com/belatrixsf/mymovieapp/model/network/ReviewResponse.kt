@@ -14,7 +14,7 @@ class ReviewResponse {
 
     @SerializedName("results")
     @Expose
-    var results: List<Review>?= null
+    var results: MutableList<Review>?= null
 
     @SerializedName("total_pages")
     @Expose

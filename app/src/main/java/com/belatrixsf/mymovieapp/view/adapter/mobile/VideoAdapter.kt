@@ -47,7 +47,7 @@ class VideoAdapter(private val videos: List<Video>, private val mContext: Contex
             Log.i("videooo","$YOUTUBE_THUMBNAIL_URL${video.key}/default.jpg")
             Glide.with(itemView)
                 .load("$YOUTUBE_THUMBNAIL_URL${video.key}/default.jpg")
-                .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground))
                 .into(imageVideo)
         }
     }

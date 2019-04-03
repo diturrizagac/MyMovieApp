@@ -32,7 +32,7 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
     }
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var image: ImageView = itemView.findViewById(R.id.movie_img_id) //item_video_cover
+        private var image: ImageView = itemView.findViewById(R.id.movie_img_id) //item_video_cover
 
         val myView = itemView.setOnClickListener {
             val position = adapterPosition

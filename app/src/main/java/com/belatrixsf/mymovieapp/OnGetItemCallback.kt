@@ -1,6 +1,6 @@
 package com.belatrixsf.mymovieapp
 
 interface OnGetItemCallback<D> {
-    fun onSuccess(items: List<D>)
+    fun onSuccess(items: MutableList<D>)
     fun onError()
 }

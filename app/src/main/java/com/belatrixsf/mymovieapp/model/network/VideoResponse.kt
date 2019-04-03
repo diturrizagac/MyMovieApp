@@ -11,5 +11,5 @@ class VideoResponse {
 
     @SerializedName("results")
     @Expose
-    var results: List<Video>? = null
+    var results: MutableList<Video>? = null
 }

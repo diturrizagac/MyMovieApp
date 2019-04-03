@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AbsListView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,32 +15,48 @@ import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
+import com.belatrixsf.mymovieapp.util.Messages
+import com.belatrixsf.mymovieapp.util.PaginationScrollListener
 import com.belatrixsf.mymovieapp.view.adapter.mobile.MoviesAdapter
 import com.google.gson.Gson
 
 class MovieRecyclerActivity : AppCompatActivity() {
     private lateinit var movieList: RecyclerView
+    //private var moviesRepository = MoviesRepository.getInstance()
     private var moviesRepository = MoviesRepository.getInstance()
     private var dbHelper = FavoriteDbHelper(this)
     private var flag = false
+    private lateinit var paginator : PaginationScrollListener
+    private var isLoading : Boolean = false
+    private var isLastPage : Boolean = false
+    private var TOTAL_PAGES : Int? = 0
+    private var currentPage = 1
+    private lateinit var layoutManager : GridLayoutManager
+    private val context = this@MovieRecyclerActivity
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_recycler)
-        movieList = findViewById(R.id.movie_recycler_view)
-        movieList.layoutManager = GridLayoutManager(this, 3)
+        initializeUI()
         showMoviesT()
 
-
-        movieList.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+        movieList.addOnScrollListener(object: RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
+                doSomething()
             }
         })
+    }
+
+    private fun doSomething(){
+
+    }
+
+    private fun initializeUI(){
+        movieList = findViewById(R.id.movie_recycler_view)
+        layoutManager = GridLayoutManager(this, 3)
+        movieList.layoutManager = layoutManager
     }
 
     //flag to refresh favorite list :D
@@ -54,42 +71,42 @@ class MovieRecyclerActivity : AppCompatActivity() {
 
     private fun showMoviesT() {
         moviesRepository.getMovies(object : OnGetItemCallback<Movie> {
-            override fun onSuccess(items: List<Movie>) {
+            override fun onSuccess(items: MutableList<Movie>) {
                 setAdapter(
-                    MoviesAdapter(items, this@MovieRecyclerActivity)
+                    MoviesAdapter(items, context)
                 )
             }
 
             override fun onError() {
-                showErrorMessage()
+                Messages().showErrorMessage(context)
             }
-        })
+        },currentPage)
     }
 
     private fun showPopularMovies(){
         moviesRepository.getPopularMovies(object : OnGetItemCallback<Movie> {
-            override fun onSuccess(items: List<Movie>) {
+            override fun onSuccess(items: MutableList<Movie>) {
                 setAdapter(
-                    MoviesAdapter(items, this@MovieRecyclerActivity)
+                    MoviesAdapter(items, context)
                 )
             }
             override fun onError() {
-                showErrorMessage()
+                Messages().showErrorMessage(context)
             }
-        })
+        },currentPage)
     }
 
     private fun showTopRatedMovies(){
         moviesRepository.getTopRatedMovies(object : OnGetItemCallback<Movie> {
-            override fun onSuccess(items: List<Movie>) {
+            override fun onSuccess(items: MutableList<Movie>) {
                 setAdapter(
-                    MoviesAdapter(items, this@MovieRecyclerActivity)
+                    MoviesAdapter(items, context)
                 )
             }
             override fun onError() {
-                showErrorMessage()
+                Messages().showErrorMessage(context)
             }
-        })
+        },currentPage)
     }
 
     private fun showFavorites(){
@@ -151,10 +168,5 @@ class MovieRecyclerActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    fun showErrorMessage(){
-        Toast.makeText(this@MovieRecyclerActivity, "Please check your internet connection.", Toast.LENGTH_SHORT)
-            .show()
     }
 }

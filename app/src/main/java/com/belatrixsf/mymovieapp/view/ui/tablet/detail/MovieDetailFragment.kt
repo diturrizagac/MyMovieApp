@@ -25,6 +25,7 @@ import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
 import com.belatrixsf.mymovieapp.repository.ReviewsRepository
 import com.belatrixsf.mymovieapp.repository.VideosRepository
+import com.belatrixsf.mymovieapp.util.Messages
 import com.belatrixsf.mymovieapp.view.adapter.tablet.ReviewAdapterFragment
 import com.belatrixsf.mymovieapp.view.adapter.tablet.VideoAdapterFragment
 import com.belatrixsf.mymovieapp.view.ui.tablet.main.MovieListFragment
@@ -110,14 +111,13 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
     private fun showVideos(){
         videosRepository.getVideos(
             object: OnGetItemCallback<Video> {
-                override fun onSuccess(items: List<Video>) {
+                override fun onSuccess(items: MutableList<Video>) {
                     videoAdapter = VideoAdapterFragment(items, view!!.context)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
                 }
                 override fun onError() {
-                    Toast.makeText(view!!.context, "VIDEO Please check your internet connectionVIDEOS.", Toast.LENGTH_SHORT)
-                        .show()
+                    Messages().showErrorMessage(view!!.context,"VIDEO Please check your internet connectionVIDEOS.")
                 }
             }, movie.id
         )
@@ -125,15 +125,14 @@ class MovieDetailFragment : Fragment(), VideoAdapterFragment.OnClickItemVideoAda
     private fun showReviews(){
         reviewRepository.getReviews(
             object: OnGetItemCallback<Review> {
-                override fun onSuccess(items: List<Review>) {
+                override fun onSuccess(items: MutableList<Review>) {
                     reviewAdapter = ReviewAdapterFragment(items, view!!.context)
                     //listener
                     reviewList.adapter = reviewAdapter
                 }
 
                 override fun onError() {
-                    Toast.makeText(view!!.context, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)
-                        .show()
+                    Messages().showErrorMessage(view!!.context,"REVIEW Please check your internet connection.")
                 }
             },movie.id
         )

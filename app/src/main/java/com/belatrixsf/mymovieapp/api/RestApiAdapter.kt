@@ -12,17 +12,20 @@ import retrofit2.http.Query
 interface RestApiAdapter {
     @GET("discover/movie?sort_by=popularity.asc")// discover/movie
     fun getMovies(
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("page") pageIndex: Int
     ): Call<MoviesResponse>
 
     @GET("movie/popular")
     fun getPopularMovies(
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("page") pageIndex: Int
     ): Call<MoviesResponse>
 
     @GET("movie/top_rated")
     fun getTopRatedMovies(
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("page") pageIndex: Int
     ): Call<MoviesResponse>
 
     @GET("movie/{movie_id}/videos")

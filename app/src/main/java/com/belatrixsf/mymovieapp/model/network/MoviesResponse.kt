@@ -15,7 +15,7 @@ class MoviesResponse {
 
     @SerializedName("results")
     @Expose
-    var movies: List<Movie>? = null
+    var movies: MutableList<Movie>? = null
 
     @SerializedName("total_pages")
     @Expose

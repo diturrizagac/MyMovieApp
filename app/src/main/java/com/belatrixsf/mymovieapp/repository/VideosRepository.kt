@@ -2,7 +2,7 @@ package com.belatrixsf.mymovieapp.repository
 
 import android.util.Log
 import com.belatrixsf.mymovieapp.OnGetItemCallback
-import com.belatrixsf.mymovieapp.api.Api.BASE_URL
+import com.belatrixsf.mymovieapp.api.Api
 import com.belatrixsf.mymovieapp.api.Api.MY_API_KEY
 import com.belatrixsf.mymovieapp.api.RestApiAdapter
 import com.belatrixsf.mymovieapp.model.entity.Video
@@ -10,10 +10,8 @@ import com.belatrixsf.mymovieapp.model.network.VideoResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class VideosRepository {
+class VideosRepository : Repository{
     var mApiAdapter: RestApiAdapter? = null
 
     constructor(apiAdapter: RestApiAdapter) {
@@ -21,33 +19,18 @@ class VideosRepository {
     }
 
     companion object {
-
         var repository: VideosRepository? = null
-
         fun getInstance(): VideosRepository {
             if (repository == null) {
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-
+                val retrofit = Api.getRetrofit()
                 repository = VideosRepository(retrofit.create<RestApiAdapter>(RestApiAdapter::class.java))
             }
-
             return repository as VideosRepository
-        }
-
-        fun get(): RestApiAdapter {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            return retrofit.create<RestApiAdapter>(RestApiAdapter::class.java)
         }
     }
 
     fun getVideos(callback: OnGetItemCallback<Video>, id: Int) {
-        val allVideos = get().getVideos(id,MY_API_KEY)
+        val allVideos = Api.getRestApiAdapter().getVideos(id,MY_API_KEY)
         Log.i("url videoss",allVideos.request().url().toString())
         allVideos.enqueue(
             object : Callback<VideoResponse> {

@@ -46,7 +46,7 @@ class MoviesAdapterFragment(private val movies: List<Movie>, private val mContex
         fun bind(movie: Movie) {
             Glide.with(itemView)
                 .load("$IMAGE_BASE_URL${movie.poster_path}")
-                .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground))
                 .into(image)
         }
 

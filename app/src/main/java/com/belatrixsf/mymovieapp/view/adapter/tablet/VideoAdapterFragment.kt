@@ -50,7 +50,7 @@ class VideoAdapterFragment(private val videos: List<Video>, private val mContext
             Log.i("videooo","${Api.YOUTUBE_THUMBNAIL_URL}${video.key}/default.jpg")
             Glide.with(itemView)
                 .load("${Api.YOUTUBE_THUMBNAIL_URL}${video.key}/default.jpg")
-                .apply(RequestOptions.placeholderOf(R.color.colorPrimaryDark))
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_launcher_foreground))
                 .into(imageVideo)
         }
     }

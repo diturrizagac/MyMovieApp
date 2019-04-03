@@ -16,6 +16,7 @@ import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
+import com.belatrixsf.mymovieapp.util.Messages
 import com.belatrixsf.mymovieapp.view.adapter.mobile.MoviesAdapter
 import com.belatrixsf.mymovieapp.view.adapter.tablet.MoviesAdapterFragment
 import com.belatrixsf.mymovieapp.view.ui.tablet.detail.MovieDetailFragment
@@ -27,16 +28,16 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
     private lateinit var dbHelper :FavoriteDbHelper
     private var moviesRepository = MoviesRepository.getInstance()
     private var listenerListFragment: OnMovieListListener? = null
+    private var currentPage = 1
     private val callback = object : OnGetItemCallback<Movie>{
-        override fun onSuccess(movies: List<Movie>) {
+        override fun onSuccess(items: MutableList<Movie>) {
             //connect Fragment - Adapter
-            setAdapter(MoviesAdapterFragment(movies, view!!.context))
-            listenerListFragment!!.sendMovie(movies[0])
+            setAdapter(MoviesAdapterFragment(items, view!!.context))
+            listenerListFragment!!.sendMovie(items[0])
         }
 
         override fun onError() {
-            Toast.makeText(view!!.context, "Please check your internet connection.", Toast.LENGTH_SHORT)
-                .show()
+            Messages().showErrorMessage(view!!.context,"Please check your internet connection.")
         }
     }
 
@@ -59,15 +60,15 @@ class MovieListFragment : Fragment(), MoviesAdapterFragment.OnItemClickListener 
 
 
     fun showMovies(){
-        moviesRepository.getMovies(callback)
+        moviesRepository.getMovies(callback,currentPage)
     }
 
     fun showPopularMovies(){
-        moviesRepository.getPopularMovies(callback)
+        moviesRepository.getPopularMovies(callback,currentPage)
     }
 
     fun showTopRatedMovies(){
-        moviesRepository.getTopRatedMovies(callback)
+        moviesRepository.getTopRatedMovies(callback,currentPage)
     }
 
     fun showFavoritesSQLite(){

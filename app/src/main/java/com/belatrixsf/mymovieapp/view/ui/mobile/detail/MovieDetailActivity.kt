@@ -16,6 +16,7 @@ import com.belatrixsf.mymovieapp.OnGetItemCallback
 import com.belatrixsf.mymovieapp.OnGetReviewCallback
 import com.belatrixsf.mymovieapp.OnGetVideoCallback
 import com.belatrixsf.mymovieapp.R
+import com.belatrixsf.mymovieapp.api.Api
 import com.belatrixsf.mymovieapp.api.Api.IMAGE_BASE_URL
 import com.belatrixsf.mymovieapp.api.Api.YOUTUBE_VIDEO_URL
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
@@ -24,6 +25,7 @@ import com.belatrixsf.mymovieapp.model.entity.Review
 import com.belatrixsf.mymovieapp.model.entity.Video
 import com.belatrixsf.mymovieapp.repository.ReviewsRepository
 import com.belatrixsf.mymovieapp.repository.VideosRepository
+import com.belatrixsf.mymovieapp.util.Messages
 import com.belatrixsf.mymovieapp.view.adapter.mobile.ReviewAdapter
 import com.belatrixsf.mymovieapp.view.adapter.mobile.VideoAdapter
 import com.bumptech.glide.Glide
@@ -41,7 +43,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     lateinit var videoList: RecyclerView
     lateinit var reviewList: RecyclerView
     private var videoAdapter : VideoAdapter? = null
-    private var reviewAdapter : ReviewAdapter? = null
     private var videosRepository = VideosRepository.getInstance()
     private var reviewRepository = ReviewsRepository.getInstance()
     lateinit var movie : Movie
@@ -50,6 +51,7 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     lateinit var appBar : AppBarLayout
     lateinit var favoriteBtn : Button
     private var favoriteDbHelper = FavoriteDbHelper(this)
+    private val context = this@MovieDetailActivity
 
     @SuppressWarnings("ConstantConditions")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,16 +150,14 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     private fun showVideos(){
         videosRepository.getVideos(
             object: OnGetItemCallback<Video> {
-                override fun onSuccess(items: List<Video>) {
-                    videoAdapter =
-                        VideoAdapter(items, this@MovieDetailActivity)
+                override fun onSuccess(items: MutableList<Video>) {
+                    videoAdapter = VideoAdapter(items, context)
                     setListenerVideo()
                     videoList.adapter = videoAdapter
-                    //videoList.adapter = VideoAdapter(videos,this@MovieDetailActivity)
+
                 }
                 override fun onError() {
-                    Toast.makeText(this@MovieDetailActivity, "VIDEO Please check your internet connection .", Toast.LENGTH_SHORT)
-                        .show()
+                    Messages().showErrorMessage(context)
                 }
 
             }, movie.id
@@ -166,15 +166,11 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     private fun showReviews(){
         reviewRepository.getReviews(
             object: OnGetItemCallback<Review>{
-                override fun onSuccess(items: List<Review>) {
-                    //reviewAdapter = ReviewAdapter(reviews,this@MovieDetailActivity)
-                    //reviewList.adapter = reviewAdapter
-                    reviewList.adapter =
-                        ReviewAdapter(items, this@MovieDetailActivity)
+                override fun onSuccess(items: MutableList<Review>) {
+                    reviewList.adapter = ReviewAdapter(items, context)
                 }
                 override fun onError() {
-                    Toast.makeText(this@MovieDetailActivity, "REVIEW Please check your internet connection.", Toast.LENGTH_SHORT)
-                        .show()
+                    Messages().showErrorMessage(context)
                 }
 
             },movie.id
