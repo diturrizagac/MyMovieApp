@@ -1,5 +1,7 @@
 package com.belatrixsf.mymovieapp.repository
 
+import android.util.Log
+import com.belatrixsf.mymovieapp.OnFinishedListener
 import com.belatrixsf.mymovieapp.OnGetItemCallback
 import com.belatrixsf.mymovieapp.api.Api
 import com.belatrixsf.mymovieapp.api.Api.MY_API_KEY
@@ -12,6 +14,8 @@ import retrofit2.Response
 
 class MoviesRepository : Repository{
     var mApiAdapter: RestApiAdapter
+    lateinit var onFinishedListener: OnFinishedListener
+    private val TAG = "MoviesRepository"
 
     constructor(apiAdapter: RestApiAdapter) {
         mApiAdapter = apiAdapter
@@ -53,6 +57,7 @@ class MoviesRepository : Repository{
                         val moviesResponse = response.body()
                         if (moviesResponse?.movies != null) {
                             callback.onSuccess(moviesResponse.movies!!)
+                            onFinishedListener.onFinished(moviesResponse.movies!!)
                         } else {
                             callback.onError()
                         }
@@ -63,6 +68,8 @@ class MoviesRepository : Repository{
 
                 override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
                     callback.onError()
+                    Log.e(TAG, t.toString())
+                    onFinishedListener.onFailure(t)
                 }
             }
         )
