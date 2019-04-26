@@ -19,6 +19,10 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie_card_view, parent, false)
+        when(viewType){
+            is ITEM -> view = MovieViewHolder(parent)
+        }
+
         return MovieViewHolder(view)
     }
 
@@ -26,6 +30,7 @@ class MoviesAdapter(private val movies: List<Movie>, private val mContext: Conte
         val movie = movies[position]
         holder.bind(movie)
     }
+
 
     override fun getItemCount(): Int {
         return movies.size

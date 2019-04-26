@@ -58,6 +58,8 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
         initializeUI()
+        retrieveData()
+        setUI()
         showVideos()
         showReviews()
     }
@@ -77,8 +79,14 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
 
         videoList = findViewById(R.id.detail_body_recyclerView_trailers)
         reviewList = findViewById(R.id.detail_body_recyclerView_reviews)
+    }
 
+    private fun retrieveData(){
+        movie = intent.extras!!.getSerializable("movie") as Movie // casteo // oncreatemenu
+    }
 
+    @SuppressLint("WrongConstant")
+    private fun setUI(){
         //arction bar
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -87,10 +95,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         videoList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         //setting format Reviews
         reviewList.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-
-        // Recieve data
-        val movie = intent.extras!!.getSerializable("movie") as Movie // casteo // oncreatemenu
-        this.movie = movie
 
         // Setting values
         collapsingToolbar.title = movie.title
@@ -102,7 +106,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             .load("$IMAGE_BASE_URL${movie.backdrop_path}")
             .apply(RequestOptions.placeholderOf(R.color.background900))
             .into(imageIv!!)
-
 
         if(isFavoriteInSQLite()){
             favoriteBtn.text = "<3"
@@ -122,31 +125,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
         return favoriteDbHelper.isExistFavorite(movie.id)
     }
 
-
-    private fun isFavorite():Boolean{
-        val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
-        val allPreferences = sharedPreferences.all
-        val item =  allPreferences.entries.iterator()
-
-        while (item.hasNext()){
-            val pair = item.next()
-            //bring favorite as json through key
-            val sMov = sharedPreferences.getString(pair.key, "")
-            //convert json to object
-            val objMovie = Gson().fromJson(sMov, Movie::class.java)
-
-            //Log.i("check movie", "${objMovie.title}")
-            if (objMovie.id== movie.id)
-                return true
-        }
-        return false
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
     private fun showVideos(){
         videosRepository.getVideos(
             object: OnGetItemCallback<Video> {
@@ -159,7 +137,6 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
                 override fun onError() {
                     Messages().showErrorMessage(context)
                 }
-
             }, movie.id
         )
     }
@@ -178,13 +155,11 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
     }
 
     private fun setListenerVideo() {
-        videoAdapter!!.listenerAdapter = this
-
+        videoAdapter?.listenerAdapter = this
     }
 
     override fun goToYoutubeIntent(video:Video){
         Log.i("goYoutube","$YOUTUBE_VIDEO_URL${video.key}")
-
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$YOUTUBE_VIDEO_URL${video.key}"))
         startActivity(intent)
     }
@@ -199,6 +174,11 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             favoriteBtn.text = "Mark as Favorite"
             Log.i("deleteFavorite","movie removed SQLite")
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     private fun saveMovieAsFavorite(movie:Movie){
@@ -218,5 +198,24 @@ class MovieDetailActivity : AppCompatActivity(), VideoAdapter.OnClickItemVideoAd
             favoriteBtn.text = "Mark as Favorite"
             Log.i("removing movieAux",sMovie)
         }
+    }
+
+    private fun isFavorite():Boolean{
+        val sharedPreferences = getSharedPreferences("movieapppreference", Context.MODE_PRIVATE)
+        val allPreferences = sharedPreferences.all
+        val item =  allPreferences.entries.iterator()
+
+        while (item.hasNext()){
+            val pair = item.next()
+            //bring favorite as json through key
+            val sMov = sharedPreferences.getString(pair.key, "")
+            //convert json to object
+            val objMovie = Gson().fromJson(sMov, Movie::class.java)
+
+            //Log.i("check movie", "${objMovie.title}")
+            if (objMovie.id== movie.id)
+                return true
+        }
+        return false
     }
 }

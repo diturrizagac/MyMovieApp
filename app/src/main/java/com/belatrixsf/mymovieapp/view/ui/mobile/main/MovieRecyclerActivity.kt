@@ -13,6 +13,7 @@ import com.belatrixsf.mymovieapp.R
 import com.belatrixsf.mymovieapp.data.FavoriteDbHelper
 import com.belatrixsf.mymovieapp.model.entity.Movie
 import com.belatrixsf.mymovieapp.repository.MoviesRepository
+import com.belatrixsf.mymovieapp.util.EndlessRecyclerViewScrollListener
 import com.belatrixsf.mymovieapp.util.Messages
 import com.belatrixsf.mymovieapp.view.adapter.mobile.MoviesAdapter
 import com.google.gson.Gson
@@ -22,57 +23,19 @@ class MovieRecyclerActivity : AppCompatActivity() {
     private var moviesRepository = MoviesRepository.getInstance()
     private var dbHelper = FavoriteDbHelper(this)
     private var flag = false
-    private var currentPage = 1
+    private var currentPage = 0
     private val context = this@MovieRecyclerActivity
-    private lateinit var layoutManager : GridLayoutManager
-    private var visibleThreshold = 5
-    private var visibleItemCount : Int? = null
-    private var totalItemCount : Int? = null
-    private var firstVisibleItem : Int? = null
-    private var previousTotal = 0
-    private var isLoading : Boolean = true
-    private var TOTAL_PAGES : Int? = 0
+    private var layoutManager = GridLayoutManager(this, 3)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_recycler)
         initializeUI()
-        showMoviesT()
-        setListeners()
-    }
-
-    private fun setListeners(){
-        movieList.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                visibleItemCount = movieList.childCount
-                totalItemCount = layoutManager.itemCount
-                firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-
-                //Handling the infinite scroll
-                if(isLoading){
-                    if(totalItemCount!! > previousTotal){
-                        isLoading = false
-                        previousTotal = totalItemCount!!
-                    }
-                }
-
-                if(!isLoading && (totalItemCount!! - visibleItemCount!!)
-                    <= (firstVisibleItem!! + visibleThreshold)){
-                    getMoreData(currentPage)
-                    isLoading = true
-                }
-            }
-        })
-    }
-
-    fun getMoreData(page : Int){
-
+        //showMoviesT()
     }
 
     private fun initializeUI(){
         movieList = findViewById(R.id.movie_recycler_view)
-        layoutManager = GridLayoutManager(this, 3)
         movieList.layoutManager = layoutManager
     }
 
@@ -84,7 +47,6 @@ class MovieRecyclerActivity : AppCompatActivity() {
             flag = false
         }
     }
-
 
     private fun showMoviesT() {
         moviesRepository.getMovies(object : OnGetItemCallback<Movie> {
@@ -145,16 +107,19 @@ class MovieRecyclerActivity : AppCompatActivity() {
         return when(item!!.itemId){
             R.id.option_main -> {
                 showMoviesT()
+                currentPage = 1
                 flag = false
                 true
             }
             R.id.option_popular_movies -> {
                 showPopularMovies()
+                currentPage = 1
                 flag = false
                 true
             }
             R.id.option_rated_movies -> {
                 showTopRatedMovies()
+                currentPage = 1
                 flag = false
                 true
             }

@@ -1,5 +1,6 @@
 package com.belatrixsf.mymovieapp.repository
 
-interface Repository
-
+interface Repository {
+    //fun getInstance(): T
+}
 

@@ -17,7 +17,7 @@ interface RestApiAdapter {
     ): Call<MoviesResponse>
 
     @GET("movie/popular")
-    fun getPopularMovies(
+    fun     getPopularMovies(
         @Query("api_key") apiKey: String,
         @Query("page") pageIndex: Int
     ): Call<MoviesResponse>

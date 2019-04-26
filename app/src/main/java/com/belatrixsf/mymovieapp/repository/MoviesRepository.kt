@@ -14,7 +14,7 @@ import retrofit2.Response
 
 class MoviesRepository : Repository{
     var mApiAdapter: RestApiAdapter
-    lateinit var onFinishedListener: OnFinishedListener
+    //lateinit var onFinishedListener: OnFinishedListener
     private val TAG = "MoviesRepository"
 
     constructor(apiAdapter: RestApiAdapter) {
@@ -22,6 +22,7 @@ class MoviesRepository : Repository{
     }
 
     companion object {
+        //static en java
         var repository: MoviesRepository? = null
         fun getInstance(): MoviesRepository {
             if (repository == null) {
@@ -31,7 +32,6 @@ class MoviesRepository : Repository{
             return repository as MoviesRepository
         }
     }
-
 
     fun getMovies(callback: OnGetItemCallback<Movie>, page: Int){
         val allMovies = Api.getRestApiAdapter().getMovies(MY_API_KEY,page)
@@ -57,7 +57,6 @@ class MoviesRepository : Repository{
                         val moviesResponse = response.body()
                         if (moviesResponse?.movies != null) {
                             callback.onSuccess(moviesResponse.movies!!)
-                            onFinishedListener.onFinished(moviesResponse.movies!!)
                         } else {
                             callback.onError()
                         }
@@ -69,7 +68,6 @@ class MoviesRepository : Repository{
                 override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
                     callback.onError()
                     Log.e(TAG, t.toString())
-                    onFinishedListener.onFailure(t)
                 }
             }
         )
